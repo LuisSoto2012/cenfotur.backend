@@ -51,12 +51,26 @@ namespace Cenfotur.WebApi.Controllers
             {
                 return BadRequest($"Ya existe un empleado registrado con ese DNI: {_Empleado_I_DTO.NumDoc } ó usuario: {_Empleado_I_DTO.Usuario}");
             }
+            
+            await using var transaction = await _Context.Database.BeginTransactionAsync();
 
-            var Empleado = _Mapper.Map<Empleado>(_Empleado_I_DTO);
-            Empleado.FechaCreacion = DateTime.Now;
-
-            _Context.Add(Empleado);
-            await _Context.SaveChangesAsync();
+            try
+            {
+                var Empleado = _Mapper.Map<Empleado>(_Empleado_I_DTO);
+                Empleado.FechaCreacion = DateTime.Now;
+                _Context.Add(Empleado);
+                //Add Role
+                var EmpleadoRol = new EmpleadoRol { EmpleadoId = Empleado.EmpleadoId, RolId = _Empleado_I_DTO.RolId };
+                _Context.Add(EmpleadoRol);
+                await _Context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             return Ok();
         }
 
@@ -72,19 +86,43 @@ namespace Cenfotur.WebApi.Controllers
                 return BadRequest("El Id es invalido");
             }
 
-            var Existe = await _Context.Empleados.AnyAsync(e => e.EmpleadoId == Id);
-            if (Existe)
+            await using var transaction = await _Context.Database.BeginTransactionAsync();
+
+            try
             {
-                var Empleados = _Mapper.Map<Empleado>(_Empleado_I_DTO);
-                Empleados.EmpleadoId = Id;
-                Empleados.FechaModificacion = DateTime.Now;
+                var Existe = await _Context.Empleados.AnyAsync(e => e.EmpleadoId == Id);
+                if (Existe)
+                {
+                    var Empleados = _Mapper.Map<Empleado>(_Empleado_I_DTO);
+                    Empleados.EmpleadoId = Id;
+                    Empleados.FechaModificacion = DateTime.Now;
 
+                    _Context.Update(Empleados);
+                
+                    //Delete existing Role
+                    var empleadoConRol = await _Context.EmpleadoRol.FirstOrDefaultAsync(x => x.RolId != _Empleado_I_DTO.RolId &&
+                        x.EmpleadoId == Id);
 
-                _Context.Update(Empleados);
-                await _Context.SaveChangesAsync();
-                return NoContent();
+                    if (empleadoConRol != null) ;
+                    {
+                        _Context.EmpleadoRol.Remove(empleadoConRol);
+                        //Add new role
+                        var newRole = new EmpleadoRol { RolId = _Empleado_I_DTO.RolId, EmpleadoId = Id };
+                        _Context.Add(newRole);
+                    }
+                
+                    await _Context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return NoContent();
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
 

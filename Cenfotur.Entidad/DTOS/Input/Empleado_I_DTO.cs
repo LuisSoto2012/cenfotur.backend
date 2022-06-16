@@ -38,6 +38,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public string Contrasena { get; set; } = string.Empty;
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }
-        public Boolean Activo { get; set; }
+        public bool Activo { get; set; }
+        public int RolId { get; set; }
     }
 }
