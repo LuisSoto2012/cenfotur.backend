@@ -15,7 +15,8 @@ namespace Cenfotur.Entidad.AutoMapper
         public AutoMapperProfiles()
         {
             CreateMap<Empleado_I_DTO, Empleado>(); // Inserta
-            CreateMap<Empleado, Empleado_O_DTO>(); // Lee
+            CreateMap<Empleado, Empleado_O_DTO>()
+                .ForMember(r => r.RolId, x => x.MapFrom(c => c.EmpleadoRol.FirstOrDefault() == null ? 0 : c.EmpleadoRol.First().RolId)); // Lee
 
             CreateMap<PuestoLaboral_I_DTO, PuestoLaboral>(); // Inserta
             CreateMap<PuestoLaboral, PuestoLaboral_O_DTO>(); // Lee
@@ -63,7 +64,8 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<MetaPresupuestal, MetaPresupuestal_O_DTO>(); // Lee
 
 
-
+            CreateMap<Curso_I_DTO, Curso>(); // Inserta
+            CreateMap<Curso, Curso_O_DTO>(); // Lee
 
         }
 

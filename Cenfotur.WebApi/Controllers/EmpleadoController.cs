@@ -26,7 +26,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet] //api/Empleados
         public async Task<ActionResult<List<Empleado_O_DTO>>> Get()
         {
-            var Empleados = await _Context.Empleados.ToListAsync();
+            var Empleados = await _Context.Empleados.Include(e => e.EmpleadoRol).ToListAsync();
             return _Mapper.Map<List<Empleado_O_DTO>>(Empleados);
         }
 
@@ -99,13 +99,16 @@ namespace Cenfotur.WebApi.Controllers
 
                     _Context.Update(Empleados);
                 
-                    //Delete existing Role
-                    var empleadoConRol = await _Context.EmpleadoRol.FirstOrDefaultAsync(x => x.RolId != _Empleado_I_DTO.RolId &&
-                        x.EmpleadoId == Id);
+                    //Update existing Role
+                    var empleadoConRol = await _Context.EmpleadoRol.FirstOrDefaultAsync(x => x.EmpleadoId == Id);
 
-                    if (empleadoConRol != null) ;
+                    if (empleadoConRol != null)
                     {
-                        _Context.EmpleadoRol.Remove(empleadoConRol);
+                        empleadoConRol.RolId = _Empleado_I_DTO.RolId;
+                        _Context.EmpleadoRol.Update(empleadoConRol);
+                    }
+                    else
+                    {
                         //Add new role
                         var newRole = new EmpleadoRol { RolId = _Empleado_I_DTO.RolId, EmpleadoId = Id };
                         _Context.Add(newRole);
