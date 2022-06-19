@@ -36,5 +36,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         // Para relacion mucho a muchos
         //public ICollection<EmpleadoRol> EmpleadoRol { get; set; }
         public int RolId { get; set; }
+        public int? PuestoLaboralId { get; set; }
+        public string PuestoLaboral { get; set; }
     }
 }

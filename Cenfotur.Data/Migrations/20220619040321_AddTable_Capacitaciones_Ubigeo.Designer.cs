@@ -4,6 +4,7 @@ using Cenfotur.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cenfotur.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619040321_AddTable_Capacitaciones_Ubigeo")]
+    partial class AddTable_Capacitaciones_Ubigeo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,8 +118,9 @@ namespace Cenfotur.Data.Migrations
                     b.Property<int>("TipoCapacitacionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UbigueoId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Ubigeo")
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("Ubigeo");
 
                     b.Property<int>("UsuarioCreacionId")
                         .HasColumnType("int");
@@ -133,9 +136,7 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasIndex("TipoCapacitacionId");
 
-                    b.HasIndex("UbigueoId");
-
-                    b.ToTable("Capacitaciones");
+                    b.ToTable("Capacitacions");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Contratacion", b =>
@@ -300,22 +301,20 @@ namespace Cenfotur.Data.Migrations
                     b.Property<string>("DistritoId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DepartamentoId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Nombre");
 
-                    b.Property<string>("ProvinciaId")
+                    b.Property<int>("ProvinciaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProvinciaId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("DistritoId");
 
-                    b.HasIndex("DepartamentoId");
-
-                    b.HasIndex("ProvinciaId");
+                    b.HasIndex("ProvinciaId1");
 
                     b.ToTable("Distritos");
                 });
@@ -515,7 +514,10 @@ namespace Cenfotur.Data.Migrations
                     b.Property<string>("ProvinciaId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DepartamentoId")
+                    b.Property<int>("DepartamentoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DepartamentoId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Nombre")
@@ -525,7 +527,7 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasKey("ProvinciaId");
 
-                    b.HasIndex("DepartamentoId");
+                    b.HasIndex("DepartamentoId1");
 
                     b.ToTable("Provincias");
                 });
@@ -744,7 +746,7 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasKey("TipoCapacitacionId");
 
-                    b.ToTable("TipoCapacitaciones");
+                    b.ToTable("TipoCapacitacion");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.TipoDocumento", b =>
@@ -803,17 +805,11 @@ namespace Cenfotur.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Cenfotur.Entidad.Models.Distrito", "Ubigeo")
-                        .WithMany("Capacitaciones")
-                        .HasForeignKey("UbigueoId");
-
                     b.Navigation("Facilitador");
 
                     b.Navigation("Gestor");
 
                     b.Navigation("TipoCapacitacion");
-
-                    b.Navigation("Ubigeo");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Contratacion", b =>
@@ -845,15 +841,9 @@ namespace Cenfotur.Data.Migrations
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Distrito", b =>
                 {
-                    b.HasOne("Cenfotur.Entidad.Models.Departamento", "Departamento")
-                        .WithMany("Distritos")
-                        .HasForeignKey("DepartamentoId");
-
                     b.HasOne("Cenfotur.Entidad.Models.Provincia", "Provincia")
                         .WithMany("Distritos")
-                        .HasForeignKey("ProvinciaId");
-
-                    b.Navigation("Departamento");
+                        .HasForeignKey("ProvinciaId1");
 
                     b.Navigation("Provincia");
                 });
@@ -905,7 +895,7 @@ namespace Cenfotur.Data.Migrations
                 {
                     b.HasOne("Cenfotur.Entidad.Models.Departamento", "Departamento")
                         .WithMany("Provincias")
-                        .HasForeignKey("DepartamentoId");
+                        .HasForeignKey("DepartamentoId1");
 
                     b.Navigation("Departamento");
                 });
@@ -947,14 +937,7 @@ namespace Cenfotur.Data.Migrations
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Departamento", b =>
                 {
-                    b.Navigation("Distritos");
-
                     b.Navigation("Provincias");
-                });
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Distrito", b =>
-                {
-                    b.Navigation("Capacitaciones");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Empleado", b =>

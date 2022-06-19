@@ -70,6 +70,9 @@ namespace Cenfotur.Entidad.Models
         public ICollection<EmpleadoRol> EmpleadoRol { get; set; }
 
 
-        public List<Contratacion> Contrataciones { get; set; } // Uno a muchos Contratación es el hijo
+        public List<Contratacion> Contrataciones { get; set; } // Uno a muchos Contratación es el hijo'
+
+        public int? PuestoLaboralId { get; set; }
+        public PuestoLaboral PuestoLaboral { get; set; }
     }
 }

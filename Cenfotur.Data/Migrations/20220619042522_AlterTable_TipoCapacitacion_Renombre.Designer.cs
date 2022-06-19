@@ -4,6 +4,7 @@ using Cenfotur.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cenfotur.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619042522_AlterTable_TipoCapacitacion_Renombre")]
+    partial class AlterTable_TipoCapacitacion_Renombre
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +118,7 @@ namespace Cenfotur.Data.Migrations
                     b.Property<int>("TipoCapacitacionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UbigueoId")
+                    b.Property<string>("UbigeoDistritoId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("UsuarioCreacionId")
@@ -133,7 +135,7 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasIndex("TipoCapacitacionId");
 
-                    b.HasIndex("UbigueoId");
+                    b.HasIndex("UbigeoDistritoId");
 
                     b.ToTable("Capacitaciones");
                 });
@@ -804,8 +806,8 @@ namespace Cenfotur.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Cenfotur.Entidad.Models.Distrito", "Ubigeo")
-                        .WithMany("Capacitaciones")
-                        .HasForeignKey("UbigueoId");
+                        .WithMany()
+                        .HasForeignKey("UbigeoDistritoId");
 
                     b.Navigation("Facilitador");
 
@@ -950,11 +952,6 @@ namespace Cenfotur.Data.Migrations
                     b.Navigation("Distritos");
 
                     b.Navigation("Provincias");
-                });
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Distrito", b =>
-                {
-                    b.Navigation("Capacitaciones");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Empleado", b =>

@@ -40,5 +40,6 @@ namespace Cenfotur.Entidad.DTOS.Input
         public int? UsuarioModificacionId { get; set; }
         public bool Activo { get; set; }
         public int RolId { get; set; }
+        public int? PuestoLaboralId { get; set; }
     }
 }

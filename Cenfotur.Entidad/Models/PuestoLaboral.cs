@@ -27,6 +27,8 @@ namespace Cenfotur.Entidad.Models
         [Required]
         public bool Activo { get; set; }
 
-        public List<Contratacion> Contrataciones { get; set; } // Uno a muchos Contrataciones es el hijo 
+        public List<Contratacion> Contrataciones { get; set; } // Uno a muchos Contrataciones es el hijo
+        
+        public List<Empleado> Empleados { get; set; }
     }
 }
