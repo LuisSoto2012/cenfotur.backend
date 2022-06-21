@@ -81,6 +81,7 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<Empleado, Gestor_O_DTO>()
                 .ForMember(r => r.GestorId, x => x.MapFrom(e => e.EmpleadoId))
                 .ForMember(r => r.Nombre, x => x.MapFrom(e => string.Concat(e.Nombres, " ", e.ApellidoPaterno, " ", e.ApellidoMaterno).ToUpper()));
+            CreateMap<Curso, Curso_C_DTO>();
             
             //Capacitaciones
             CreateMap<Capacitacion_I_DTO, Capacitacion>()
@@ -99,7 +100,8 @@ namespace Cenfotur.Entidad.AutoMapper
                     string.Concat(c.Facilitador.Nombres, " ", c.Facilitador.ApellidoPaterno, " ", c.Facilitador.ApellidoMaterno)))
                 .ForMember(r => r.GestorId, x => x.MapFrom(c => c.GestorId))
                 .ForMember(r => r.Gestor, x => x.MapFrom(c => c.Gestor == null ? "" : 
-                    string.Concat(c.Gestor.Nombres, " ", c.Gestor.ApellidoPaterno, " ", c.Gestor.ApellidoMaterno))); // Lee
+                    string.Concat(c.Gestor.Nombres, " ", c.Gestor.ApellidoPaterno, " ", c.Gestor.ApellidoMaterno)))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre)); // Lee
         }
 
 

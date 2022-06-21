@@ -51,7 +51,7 @@ namespace Cenfotur.WebApi.Controllers
             return distritosDb.Select(x => _mapper.Map<Distrito_O_DTO>(x));
         }
 
-        [HttpGet("TipoContrataciones")]
+        [HttpGet("TipoCapacitaciones")]
         public async Task<IEnumerable<TipoCapacitacion_O_DTO>> GetTipoCapacitaciones()
         {
             var tipoCapacitacionDb = await _context.TipoCapacitaciones.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
@@ -73,6 +73,14 @@ namespace Cenfotur.WebApi.Controllers
             var gestoresDb = await _context.Empleados.Where(x => x.Activo && x.PuestoLaboralId == 2).OrderBy(x => x.Nombres).ToListAsync();
 
             return gestoresDb.Select(x => _mapper.Map<Gestor_O_DTO>(x));
+        }
+        
+        [HttpGet("Cursos")]
+        public async Task<IEnumerable<Curso_C_DTO>> GetCursos()
+        {
+            var cursosDb = await _context.Cursos.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
+
+            return cursosDb.Select(x => _mapper.Map<Curso_C_DTO>(x));
         }
     }
 }

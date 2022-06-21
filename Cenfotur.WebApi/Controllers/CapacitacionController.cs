@@ -36,6 +36,8 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.Ubigeo.Departamento)
                 .Include(c => c.Facilitador)
                 .Include(c => c.Gestor)
+                .Include(c => c.Curso)
+                .Include(c => c.TipoCapacitacion)
                 .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && c.Activo == filtro.Activo && c.TipoCapacitacionId == filtro.TipoCapacitacionId)
                 .OrderByDescending(c => c.FechaCreacion).ToListAsync();
             return capacitacionDb.Select(c => _mapper.Map<Capacitacion_O_DTO>(c));
@@ -51,12 +53,6 @@ namespace Cenfotur.WebApi.Controllers
         [HttpPost] // Crea
         public async Task<ActionResult> Post(Capacitacion_I_DTO capacitacionIDto)
         {
-            var capacitacionNombre = await _context.Capacitaciones.AnyAsync(c => c.Nombre == capacitacionIDto.Nombre);
-            if (capacitacionNombre)
-            {
-                return BadRequest($"Ya existe una capacitación registrado con ese nombre: {capacitacionIDto.Nombre }");
-            }
-
             try
             {
                 var capacitacionNueva = _mapper.Map<Capacitacion>(capacitacionIDto);

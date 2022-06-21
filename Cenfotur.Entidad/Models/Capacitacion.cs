@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Cenfotur.Entidad.DTOS.Output;
 
 namespace Cenfotur.Entidad.Models
 {
@@ -14,8 +15,9 @@ namespace Cenfotur.Entidad.Models
         public DateTime FechaInicio { get; set; }
         [Column("FechaFin", TypeName = "Date"), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime FechaFin { get; set; }
-        [Column("Nombre", TypeName = "varchar(200)")]
-        public string Nombre { get; set; }
+
+        public int CursoId { get; set; }
+        public Curso Curso { get; set; }
         [Column("PublicoObjetivo", TypeName = "varchar(100)")]
         public string PublicoObjetivo { get; set; }
         public int Dias { get; set; }

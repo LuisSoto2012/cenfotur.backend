@@ -115,8 +115,8 @@ namespace Cenfotur.WebApi.Controllers
 
                     if (empleadoConRol != null)
                     {
-                        empleadoConRol.RolId = _Empleado_I_DTO.RolId;
-                        _context.EmpleadoRol.Update(empleadoConRol);
+                        _context.EmpleadoRol.Remove(empleadoConRol);
+                        _context.EmpleadoRol.Add(new EmpleadoRol {EmpleadoId = Id, RolId = _Empleado_I_DTO.RolId});
                     }
                     else
                     {
