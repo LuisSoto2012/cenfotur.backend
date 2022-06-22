@@ -4,6 +4,7 @@ using Cenfotur.Entidad.DTOS.Output;
 using Cenfotur.Entidad.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,7 +102,19 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.GestorId, x => x.MapFrom(c => c.GestorId))
                 .ForMember(r => r.Gestor, x => x.MapFrom(c => c.Gestor == null ? "" : 
                     string.Concat(c.Gestor.Nombres, " ", c.Gestor.ApellidoPaterno, " ", c.Gestor.ApellidoMaterno)))
-                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre)); // Lee
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre))
+                .ForMember(r => r.Documentacion, x => x.MapFrom(c => c.Documentaciones.Any(d => d.Activo) ? 
+                    new Documentacion_O_DTO
+                    {
+                        DocumentacionId = c.Documentaciones.First(d => d.Activo).DocumentacionId, 
+                        ArchivoOsFacilitador = c.Documentaciones.First(d => d.Activo).OsFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsFacilitador)),
+                        ArchivoTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrFacilitador)),
+                        ArchivoTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrGestor)),
+                        ArchivoOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor))
+                    } : new Documentacion_O_DTO() )); // Lee
+            
+            //Documento
+            CreateMap<Documentacion_I_DTO, Documentacion>();
         }
 
 

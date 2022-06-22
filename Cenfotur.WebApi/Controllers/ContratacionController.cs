@@ -312,10 +312,5 @@ namespace Cenfotur.WebApi.Controllers
             return NoContent();
 
         }
-
-
-
-
-
     }
 }

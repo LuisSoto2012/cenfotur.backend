@@ -1,6 +1,7 @@
 // Capacitacion.cs21:2421:24
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Cenfotur.Entidad.DTOS.Output;
@@ -42,6 +43,6 @@ namespace Cenfotur.Entidad.Models
         
         public bool Activo { get; set; }
         
-        
+        public List<Documentacion> Documentaciones { get; set; }
     }
 }

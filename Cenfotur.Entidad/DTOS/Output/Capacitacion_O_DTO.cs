@@ -1,6 +1,7 @@
 // Capacitacion_O_DTO.cs23:5923:59
 
 using System;
+using Cenfotur.Entidad.Models;
 
 namespace Cenfotur.Entidad.DTOS.Output
 {
@@ -31,6 +32,8 @@ namespace Cenfotur.Entidad.DTOS.Output
         public int? UsuarioModificacionId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+
+        public Documentacion_O_DTO Documentacion { get; set; }
         
         public bool Activo { get; set; }
     }
