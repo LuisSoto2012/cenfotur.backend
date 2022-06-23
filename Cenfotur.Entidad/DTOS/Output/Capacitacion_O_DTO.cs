@@ -34,6 +34,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public DateTime? FechaModificacion { get; set; }
 
         public Documentacion_O_DTO Documentacion { get; set; }
+        public MaterialAcademico_O_DTO MaterialAcademico { get; set; }
         
         public bool Activo { get; set; }
     }

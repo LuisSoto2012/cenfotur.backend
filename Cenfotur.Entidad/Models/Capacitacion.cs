@@ -44,5 +44,6 @@ namespace Cenfotur.Entidad.Models
         public bool Activo { get; set; }
         
         public List<Documentacion> Documentaciones { get; set; }
+        public List<MaterialAcademico> MaterialesAcademicos { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace Cenfotur.WebApi.Controllers
 
                 // Carga de Archivo
 
-                var ruta = @$"{_archivoSettings.RutaDocumentos}{DateTime.Now:dd.MM.yyyy}\{documentacion.CapacitacionId}\";
+                var ruta = @$"{_archivoSettings.RutaCapacitaciones}{documentacion.CapacitacionId}\Documentacion\";
                 if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
                 
                 if (documentoIDto.TdrFacilitador != null)
@@ -139,7 +139,7 @@ namespace Cenfotur.WebApi.Controllers
 
                     // Carga de Archivo
 
-                    var ruta = @$"{_archivoSettings.RutaDocumentos}{DateTime.Now:dd.MM.yyyy}\{documentoDb.CapacitacionId}\";
+                    var ruta = @$"{_archivoSettings.RutaCapacitaciones}{documentoDb.CapacitacionId}\Documentacion\";
                     if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
                     
                     if (documentoIDto.TdrFacilitador != null)

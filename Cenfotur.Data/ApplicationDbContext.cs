@@ -37,6 +37,7 @@ namespace Cenfotur.Data
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Distrito> Distritos { get; set; }
         public DbSet<Documentacion> Documentaciones { get; set; }
+        public DbSet<MaterialAcademico> MaterialesAcademicos { get; set; }
 
 
         // Esto se crea para poder agregar 2 key a una tabla es la unica manera 

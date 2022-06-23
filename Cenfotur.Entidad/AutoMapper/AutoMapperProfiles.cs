@@ -111,10 +111,26 @@ namespace Cenfotur.Entidad.AutoMapper
                         ArchivoTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrFacilitador)),
                         ArchivoTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrGestor)),
                         ArchivoOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor))
-                    } : new Documentacion_O_DTO() )); // Lee
+                    } : new Documentacion_O_DTO() ))
+                .ForMember(r => r.MaterialAcademico, x => x.MapFrom(c => c.MaterialesAcademicos.Any(d => d.Activo) ? 
+                    new MaterialAcademico_O_DTO
+                    {
+                        MaterialAcademicoId = c.MaterialesAcademicos.First(d => d.Activo).MaterialAcademicoId, 
+                        ArchivoFichaParticipante = c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante)),
+                        ArchivoFichaEmpresa = c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa)),
+                        ArchivoGesInstructivos = c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos)),
+                        ArchivoGesFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme)),
+                        ArchivoSillabus = c.MaterialesAcademicos.First(d => d.Activo).Sillabus == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Sillabus)),
+                        ArchivoPpt = c.MaterialesAcademicos.First(d => d.Activo).Ppt == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Ppt)),
+                        ArchivoEvaluaciones = c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones)),
+                        ArchivoFacInstructivos = c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos)),
+                        ArchivoFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme))
+                    } : new MaterialAcademico_O_DTO() )); // Lee
             
-            //Documento
+            //Documentacion
             CreateMap<Documentacion_I_DTO, Documentacion>();
+            //MaterialAcademico
+            CreateMap<MaterialAcademico_I_DTO, MaterialAcademico>();
         }
 
 
