@@ -70,6 +70,7 @@ namespace Cenfotur.WebApi.Controllers
                 var Empleado = _mapper.Map<Empleado>(_Empleado_I_DTO);
                 Empleado.FechaCreacion = DateTime.Now;
                 _context.Add(Empleado);
+                await _context.SaveChangesAsync();
                 //Add Role
                 var EmpleadoRol = new EmpleadoRol { EmpleadoId = Empleado.EmpleadoId, RolId = _Empleado_I_DTO.RolId };
                 _context.Add(EmpleadoRol);
