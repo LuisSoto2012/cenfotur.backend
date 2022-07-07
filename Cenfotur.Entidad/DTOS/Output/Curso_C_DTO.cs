@@ -4,5 +4,9 @@ namespace Cenfotur.Entidad.DTOS.Output
     {
         public int CursoId { get; set; }
         public string Nombre { get; set; }
+        public int? PerfilRelacionadoId { get; set; }
+        public string PerfilRelacionado { get; set; }
+        public int? Dias { get; set; }
+        public int? Horas { get; set; }
     }
 }

@@ -26,9 +26,65 @@ namespace Cenfotur.WebApi.Controllers
             var Persona = await _Context.Empleados.FirstOrDefaultAsync(e => e.Usuario == Usuario && e.Contrasena == Contrasena);
             if (Persona==null)
             {
-                return BadRequest("Revisar sus credenciales");
-            }
+                //Validar si es participante
+                var participante =
+                    await _Context.Participantes.FirstOrDefaultAsync(p =>
+                        p.Usuario == Usuario && p.Contrasena == Contrasena);
+                if (participante == null)
+                {
+                    return BadRequest("Revisar sus credenciales");    
+                }
 
+                #region Permisos Participante
+
+                var Roles = _Mapper.Map<List<Rol_O_DTO>>(_Context.Roles.Where(e => e.Nombre.ToUpper() == "PARTICIPANTE").ToList());
+                // ------------------------- Fin Seccion Roles -------------------------
+
+                // ------------------------- Inicio Seccion Modulos -------------------------
+                var ListaModulosdelParticipante = _Context.RolSubModulo.Include(sm => sm.SubModulo).Where(rsm => rsm.RolId == Roles.First().RolId).Select(e => e.SubModulo.ModuloId).ToList();
+                if (ListaModulosdelParticipante == null)
+                {
+                    return BadRequest("No se le ha asignado Modulos al usuario");
+                }
+
+                List<int> Modulos_Participante = new List<int>();
+                foreach (var m in ListaModulosdelParticipante)
+                {
+                    Modulos_Participante.Add(m);
+                }
+            
+                var Modulos = _Mapper.Map<List<Modulo_O_DTO>>(_Context.Modulos.Include(sm => sm.SubModulos).ThenInclude(rsm => rsm.RolSubModulo).Where(m => Modulos_Participante.Contains(m.ModuloId)).ToList());
+
+            
+
+                // ------------------------- Fin Seccion Modulos -------------------------
+
+
+
+
+                return new OkObjectResult(new
+                {
+                    EmpleadoId = 0,
+                    ParticipanteId = participante.ParticipanteId,
+                    Usuario = participante.Usuario,
+                    Nombres = participante.Nombres,
+                    ApePaterno = participante.ApellidoPaterno,
+                    ApeMaterno = participante.ApellidoMaterno,
+                    FechaNacimiento = participante.FechaNacimiento.HasValue ? participante.FechaNacimiento.Value.ToString("MM-dd") : "",
+                    Token = "",
+                    Success = true,
+                    Message = "Bienvenido a CENFOTUR",
+
+                    Roles,
+                    Modulos
+
+                });
+
+                #endregion
+            }
+            else
+            {
+                #region Permisos Empleado
 
             // ------------------------- Inicio Seccion Roles -------------------------
             var ListaRolesdelEmpleado = _Context.EmpleadoRol.Where(er => er.EmpleadoId == Persona.EmpleadoId).Select(e => e.RolId).ToList();
@@ -42,18 +98,12 @@ namespace Cenfotur.WebApi.Controllers
             {
                 Roles_Empleado.Add(r);
             }
-            //var prueba = Roles_Empleado;
-            //List<int> Roles_Empleado = new List<int>() { 1 };
 
             var Roles = _Mapper.Map<List<Rol_O_DTO>>(_Context.Roles.Where(e => Roles_Empleado.Contains(e.RolId)).ToList());
             // ------------------------- Fin Seccion Roles -------------------------
 
-
-
             // ------------------------- Inicio Seccion Modulos -------------------------
             var ListaModulosdelEmpleado = _Context.RolSubModulo.Include(sm => sm.SubModulo).Where(rsm => Roles_Empleado.Contains(rsm.RolId)).Select(e => e.SubModulo.ModuloId).ToList();
-            //var ListaModulosdelEmpleado = _Context.RolSubModulo.Include(sm => sm.SubModulo).Where(rsm => Roles_Empleado.Contains(rsm.RolId)).GroupBy(g=>g.RolId).Select(g => new { count = g.Count() }).ToList();
-            //var ListaModulosdelEmpleado = _Context.RolSubModulo.Where(rsm => Roles_Empleado.Contains(rsm.RolId)).Select(e => e.R).ToList();
             if (ListaModulosdelEmpleado == null)
             {
                 return BadRequest("No se le ha asignado Modulos al usuario");
@@ -64,10 +114,7 @@ namespace Cenfotur.WebApi.Controllers
             {
                 Modulos_Empleado.Add(m);
             }
-
-            //var asasa = _Context.Modulos.Include(sm => sm.SubModulos).ThenInclude(rsm => rsm.RolSubModulo).Where(m => Modulos_Empleado.Contains(m.ModuloId)).ToList();
-            //var oooo = _Context.Modulos.Include(sm => sm.SubModulos).ThenInclude(rsm=>rsm.RolSubModulo).Where(m => Modulos_Empleado.Contains(m.ModuloId)).ToList();
-            //var Modulos = _Mapper.Map<List<Modulo_O_DTO>>(_Context.Modulos.Include(sm => sm.SubModulos).Where(m => m.ModuloId == 1).ToList());
+            
             var Modulos = _Mapper.Map<List<Modulo_O_DTO>>(_Context.Modulos.Include(sm => sm.SubModulos).ThenInclude(rsm => rsm.RolSubModulo).Where(m => Modulos_Empleado.Contains(m.ModuloId)).ToList());
 
             
@@ -80,6 +127,7 @@ namespace Cenfotur.WebApi.Controllers
             return new OkObjectResult(new
             {
                 EmpleadoId = Persona.EmpleadoId,
+                ParticipanteId = 0,
                 Usuario = Persona.Usuario,
                 Nombres = Persona.Nombres,
                 ApePaterno = Persona.ApellidoPaterno,
@@ -94,6 +142,8 @@ namespace Cenfotur.WebApi.Controllers
 
             });
 
+            #endregion
+            }
 
         }
     }

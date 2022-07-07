@@ -78,9 +78,63 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet("Cursos")]
         public async Task<IEnumerable<Curso_C_DTO>> GetCursos()
         {
-            var cursosDb = await _context.Cursos.Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
+            var cursosDb = await _context.Cursos.Include(x => x.PerfilRelacionado).Where(x => x.Activo).OrderBy(x => x.Nombre).ToListAsync();
 
             return cursosDb.Select(x => _mapper.Map<Curso_C_DTO>(x));
+        }
+
+        [HttpGet("PerfilesRelacionados")]
+        public async Task<IEnumerable<PerfilRelacionado_C_DTO>> GetPerfilesRelacionados()
+        {
+            var perfilesDb = await _context.PerfilesRelacionados.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return perfilesDb.Select(x => _mapper.Map<PerfilRelacionado_C_DTO>(x));
+        }
+        
+        [HttpGet("EstadosCiviles")]
+        public async Task<IEnumerable<EstadoCivil_C_DTO>> GetEstadosCiviles()
+        {
+            var estadosDb = await _context.EstadosCiviles.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return estadosDb.Select(x => _mapper.Map<EstadoCivil_C_DTO>(x));
+        }
+        
+        [HttpGet("NivelesEducativos")]
+        public async Task<IEnumerable<NivelEducativo_C_DTO>> GetNivelesEducativos()
+        {
+            var nivelesDb = await _context.NivelesEducativos.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return nivelesDb.Select(x => _mapper.Map<NivelEducativo_C_DTO>(x));
+        }
+        
+        [HttpGet("Alcances")]
+        public async Task<IEnumerable<Alcance_C_DTO>> GetAlcances()
+        {
+            var alcancesDb = await _context.Alcances.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return alcancesDb.Select(x => _mapper.Map<Alcance_C_DTO>(x));
+        }
+        
+        [HttpGet("Cargos")]
+        public async Task<IEnumerable<Cargo_C_DTO>> GetCargos([FromQuery]string tipoCargo)
+        {
+            var cargosDb = await _context.Cargos.Where(x => x.TipoCargo == tipoCargo && x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return cargosDb.Select(x => _mapper.Map<Cargo_C_DTO>(x));
+        }
+        
+        [HttpGet("TiposRemuneraciones")]
+        public async Task<IEnumerable<TipoRemuneracion_C_DTO>> GetTiposRemuneraciones()
+        {
+            var remuneracionesDb = await _context.TiposRemuneraciones.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return remuneracionesDb.Select(x => _mapper.Map<TipoRemuneracion_C_DTO>(x));
         }
     }
 }

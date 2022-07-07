@@ -31,16 +31,21 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet] // api/capacitaciones
         public async Task<IEnumerable<Capacitacion_O_DTO>> Get([FromQuery] Capacitacion_F_DTO filtro)
         {
+            if (!filtro.Anio.HasValue)
+                return new List<Capacitacion_O_DTO>();
+            
             var capacitacionDb = await _context.Capacitaciones
                 .Include(c => c.Ubigeo.Provincia)
                 .Include(c => c.Ubigeo.Departamento)
                 .Include(c => c.Facilitador)
                 .Include(c => c.Gestor)
                 .Include(c => c.Curso)
+                .ThenInclude(cu => cu.PerfilRelacionado)
                 .Include(c => c.TipoCapacitacion)
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
-                .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && c.Activo == filtro.Activo && c.TipoCapacitacionId == filtro.TipoCapacitacionId)
+                .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo)) 
+                                                                      && (!filtro.TipoCapacitacionId.HasValue || (c.TipoCapacitacionId == filtro.TipoCapacitacionId)))
                 .OrderByDescending(c => c.FechaCreacion).ToListAsync();
             return capacitacionDb.Select(c => _mapper.Map<Capacitacion_O_DTO>(c));
         }

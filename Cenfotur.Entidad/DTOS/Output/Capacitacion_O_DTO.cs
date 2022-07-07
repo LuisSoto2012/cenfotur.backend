@@ -12,9 +12,10 @@ namespace Cenfotur.Entidad.DTOS.Output
         public DateTime FechaFin { get; set; }
         public int CursoId { get; set; }
         public string Curso { get; set; }
-        public string PublicoObjetivo { get; set; }
-        public int Dias { get; set; }
-        public int Horas { get; set; }
+        public int? PerfilRelacionadoId { get; set; }
+        public string PerfilRelacionado { get; set; }
+        public int? Dias { get; set; }
+        public int? Horas { get; set; }
         public int DistritoId { get; set; }
         public string Distrito { get; set; }
         public string ProvinciaId { get; set; }

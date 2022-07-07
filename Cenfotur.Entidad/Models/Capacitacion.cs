@@ -19,10 +19,6 @@ namespace Cenfotur.Entidad.Models
 
         public int CursoId { get; set; }
         public Curso Curso { get; set; }
-        [Column("PublicoObjetivo", TypeName = "varchar(100)")]
-        public string PublicoObjetivo { get; set; }
-        public int Dias { get; set; }
-        public int Horas { get; set; }
         public string UbigueoId { get; set; }
         public Distrito Ubigeo { get; set; }
         public int TipoCapacitacionId { get; set; }

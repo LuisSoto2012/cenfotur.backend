@@ -4,6 +4,7 @@ using Cenfotur.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cenfotur.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220702184841_AlterTable_CursosCapacitaciones")]
+    partial class AlterTable_CursosCapacitaciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,26 +23,6 @@ namespace Cenfotur.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Alcance", b =>
-                {
-                    b.Property<int>("AlcanceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AlcanceId"), 1L, 1);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nombre");
-
-                    b.HasKey("AlcanceId");
-
-                    b.ToTable("Alcances");
-                });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Anio", b =>
                 {
@@ -147,30 +129,6 @@ namespace Cenfotur.Data.Migrations
                     b.HasIndex("UbigueoId");
 
                     b.ToTable("Capacitaciones");
-                });
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Cargo", b =>
-                {
-                    b.Property<int>("CargoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CargoId"), 1L, 1);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nombre");
-
-                    b.Property<string>("TipoCargo")
-                        .HasColumnType("varchar(1)")
-                        .HasColumnName("TipoCargo");
-
-                    b.HasKey("CargoId");
-
-                    b.ToTable("Cargos");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Contratacion", b =>
@@ -534,26 +492,6 @@ namespace Cenfotur.Data.Migrations
                     b.ToTable("EmpleadoRol");
                 });
 
-            modelBuilder.Entity("Cenfotur.Entidad.Models.EstadoCivil", b =>
-                {
-                    b.Property<int>("EstadoCivilId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EstadoCivilId"), 1L, 1);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nombre");
-
-                    b.HasKey("EstadoCivilId");
-
-                    b.ToTable("EstadosCiviles");
-                });
-
             modelBuilder.Entity("Cenfotur.Entidad.Models.MaterialAcademico", b =>
                 {
                     b.Property<int>("MaterialAcademicoId")
@@ -705,26 +643,6 @@ namespace Cenfotur.Data.Migrations
                     b.ToTable("Modulos");
                 });
 
-            modelBuilder.Entity("Cenfotur.Entidad.Models.NivelEducativo", b =>
-                {
-                    b.Property<int>("NivelEducativoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NivelEducativoId"), 1L, 1);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nombre");
-
-                    b.HasKey("NivelEducativoId");
-
-                    b.ToTable("NivelesEducativos");
-                });
-
             modelBuilder.Entity("Cenfotur.Entidad.Models.Participante", b =>
                 {
                     b.Property<int>("ParticipanteId")
@@ -733,14 +651,8 @@ namespace Cenfotur.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParticipanteId"), 1L, 1);
 
-                    b.Property<bool?>("AceptaCorreosOtros")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("AlcanceId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ApellidoMaterno")
                         .HasColumnType("varchar(200)")
@@ -750,12 +662,6 @@ namespace Cenfotur.Data.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("ApellidoPaterno");
 
-                    b.Property<int?>("CargoDirectivoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CargoOperativoId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CertificadoEstudios")
                         .HasColumnType("varchar(200)")
                         .HasColumnName("CertificadoEstudios");
@@ -763,13 +669,6 @@ namespace Cenfotur.Data.Migrations
                     b.Property<string>("CertificadoTrabajo")
                         .HasColumnType("varchar(200)")
                         .HasColumnName("CertificadoTrabajo");
-
-                    b.Property<string>("Codigo")
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("Codigo");
-
-                    b.Property<bool?>("ConDiscapacidad")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Contrasena")
                         .HasColumnType("varchar(100)")
@@ -782,28 +681,6 @@ namespace Cenfotur.Data.Migrations
                     b.Property<string>("DepartamentoId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DistritoId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DomicilioActual")
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("DomicilioActual");
-
-                    b.Property<int?>("EstadoCivilId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ExperienciaEmpresa")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("ExperienciaEmpresa");
-
-                    b.Property<string>("ExperienciaLaboralGeneral")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("ExperienciaLaboralGeneral");
-
-                    b.Property<string>("ExperienciaLaboralPerfil")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("ExperienciaLaboralPerfil");
-
                     b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime");
 
@@ -813,20 +690,9 @@ namespace Cenfotur.Data.Migrations
                     b.Property<DateTime?>("FechaNacimiento")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("GradoInstruccion")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("GradoInstruccion");
-
-                    b.Property<string>("LugarNacimiento")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("LugarNacimiento");
-
                     b.Property<string>("Nacionalidad")
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Nacionalidad");
-
-                    b.Property<int?>("NivelEducativoId")
-                        .HasColumnType("int");
 
                     b.Property<string>("NombreComercial")
                         .HasColumnType("varchar(200)")
@@ -843,43 +709,23 @@ namespace Cenfotur.Data.Migrations
                     b.Property<int?>("PerfilRelacionadoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProvinciaId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("RazonSocial")
                         .HasColumnType("varchar(200)")
                         .HasColumnName("RazonSocial");
-
-                    b.Property<decimal?>("Remuneracion")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ruc")
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Ruc");
 
-                    b.Property<int?>("SexoId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TelefonoEmpresa")
                         .HasColumnType("varchar(50)")
                         .HasColumnName("TelefonoEmpresa");
-
-                    b.Property<string>("TelefonoFijo")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("TelefonoFijo");
 
                     b.Property<string>("TelefonoMovil")
                         .HasColumnType("varchar(20)")
                         .HasColumnName("TelefonoMovil");
 
-                    b.Property<string>("TipoDiscapacidad")
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("TipoDiscapacidad");
-
                     b.Property<int?>("TipoDocumentoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TipoRemuneracionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Usuario")
@@ -894,29 +740,11 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasKey("ParticipanteId");
 
-                    b.HasIndex("AlcanceId");
-
-                    b.HasIndex("CargoDirectivoId");
-
-                    b.HasIndex("CargoOperativoId");
-
                     b.HasIndex("DepartamentoId");
-
-                    b.HasIndex("DistritoId");
-
-                    b.HasIndex("EstadoCivilId");
-
-                    b.HasIndex("NivelEducativoId");
 
                     b.HasIndex("PerfilRelacionadoId");
 
-                    b.HasIndex("ProvinciaId");
-
-                    b.HasIndex("SexoId");
-
                     b.HasIndex("TipoDocumentoId");
-
-                    b.HasIndex("TipoRemuneracionId");
 
                     b.ToTable("Participantes");
                 });
@@ -1218,26 +1046,6 @@ namespace Cenfotur.Data.Migrations
                     b.ToTable("TipoDocumentos");
                 });
 
-            modelBuilder.Entity("Cenfotur.Entidad.Models.TipoRemuneracion", b =>
-                {
-                    b.Property<int>("TipoRemuneracionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoRemuneracionId"), 1L, 1);
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("Nombre");
-
-                    b.HasKey("TipoRemuneracionId");
-
-                    b.ToTable("TiposRemuneraciones");
-                });
-
             modelBuilder.Entity("Cenfotur.Entidad.Models.Capacitacion", b =>
                 {
                     b.HasOne("Cenfotur.Entidad.Models.Curso", "Curso")
@@ -1393,77 +1201,23 @@ namespace Cenfotur.Data.Migrations
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Participante", b =>
                 {
-                    b.HasOne("Cenfotur.Entidad.Models.Alcance", "Alcance")
-                        .WithMany()
-                        .HasForeignKey("AlcanceId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.Cargo", "CargoDirectivo")
-                        .WithMany()
-                        .HasForeignKey("CargoDirectivoId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.Cargo", "CargoOperativo")
-                        .WithMany()
-                        .HasForeignKey("CargoOperativoId");
-
                     b.HasOne("Cenfotur.Entidad.Models.Departamento", "Departamento")
                         .WithMany()
                         .HasForeignKey("DepartamentoId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.Distrito", "Distrito")
-                        .WithMany()
-                        .HasForeignKey("DistritoId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.EstadoCivil", "EstadoCivil")
-                        .WithMany()
-                        .HasForeignKey("EstadoCivilId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.NivelEducativo", "NivelEducativo")
-                        .WithMany()
-                        .HasForeignKey("NivelEducativoId");
 
                     b.HasOne("Cenfotur.Entidad.Models.PerfilRelacionado", "PerfilRelacionado")
                         .WithMany()
                         .HasForeignKey("PerfilRelacionadoId");
 
-                    b.HasOne("Cenfotur.Entidad.Models.Provincia", "Provincia")
-                        .WithMany()
-                        .HasForeignKey("ProvinciaId");
-
-                    b.HasOne("Cenfotur.Entidad.Models.Sexo", "Sexo")
-                        .WithMany()
-                        .HasForeignKey("SexoId");
-
                     b.HasOne("Cenfotur.Entidad.Models.TipoDocumento", "TipoDocumento")
                         .WithMany()
                         .HasForeignKey("TipoDocumentoId");
 
-                    b.HasOne("Cenfotur.Entidad.Models.TipoRemuneracion", "TipoRemuneracion")
-                        .WithMany()
-                        .HasForeignKey("TipoRemuneracionId");
-
-                    b.Navigation("Alcance");
-
-                    b.Navigation("CargoDirectivo");
-
-                    b.Navigation("CargoOperativo");
-
                     b.Navigation("Departamento");
-
-                    b.Navigation("Distrito");
-
-                    b.Navigation("EstadoCivil");
-
-                    b.Navigation("NivelEducativo");
 
                     b.Navigation("PerfilRelacionado");
 
-                    b.Navigation("Provincia");
-
-                    b.Navigation("Sexo");
-
                     b.Navigation("TipoDocumento");
-
-                    b.Navigation("TipoRemuneracion");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Provincia", b =>
