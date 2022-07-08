@@ -27,6 +27,8 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string PerfilRelacionado { get; set; }
         public string ArchivoCertificadoTrabajo { get; set; }
         public string ArchivoCertificadoEstudios { get; set; }
+        public string RutaCertificadoTrabajo { get; set; }
+        public string RutaCertificadoEstudios { get; set; }
         public bool Activo { get; set; }
         
         public string DomicilioActual { get; set; }

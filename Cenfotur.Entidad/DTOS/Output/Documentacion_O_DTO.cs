@@ -9,5 +9,9 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string ArchivoOsFacilitador { get; set; }
         public string ArchivoTdrGestor { get; set; }
         public string ArchivoOsGestor { get; set; }
+        public string RutaTdrFacilitador { get; set; }
+        public string RutaOsFacilitador { get; set; }
+        public string RutaTdrGestor { get; set; }
+        public string RutaOsGestor { get; set; }
     }
 }

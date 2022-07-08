@@ -24,6 +24,8 @@ namespace Cenfotur.Entidad.DTOS.Input
         public int? PerfilRelacionadoId { get; set; }
         public IFormFile CertificadoTrabajo { get; set; }
         public IFormFile CertificadoEstudios { get; set; }
+        public string RutaCertificadoTrabajo { get; set; }
+        public string RutaCertificadoEstudios { get; set; }
         
         public string DomicilioActual { get; set; }
         public string ProvinciaId { get; set; }

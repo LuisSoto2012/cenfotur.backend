@@ -121,7 +121,11 @@ namespace Cenfotur.Entidad.AutoMapper
                         ArchivoOsFacilitador = c.Documentaciones.First(d => d.Activo).OsFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsFacilitador)),
                         ArchivoTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrFacilitador)),
                         ArchivoTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrGestor)),
-                        ArchivoOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor))
+                        ArchivoOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor)),
+                        RutaOsFacilitador = c.Documentaciones.First(d => d.Activo).OsFacilitador,
+                        RutaTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador,
+                        RutaTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor,
+                        RutaOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor
                     } : new Documentacion_O_DTO() ))
                 .ForMember(r => r.MaterialAcademico, x => x.MapFrom(c => c.MaterialesAcademicos.Any(d => d.Activo) ? 
                     new MaterialAcademico_O_DTO
@@ -135,7 +139,16 @@ namespace Cenfotur.Entidad.AutoMapper
                         ArchivoPpt = c.MaterialesAcademicos.First(d => d.Activo).Ppt == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Ppt)),
                         ArchivoEvaluaciones = c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones)),
                         ArchivoFacInstructivos = c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos)),
-                        ArchivoFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme))
+                        ArchivoFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme)),
+                        RutaFichaParticipante = c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante,
+                        RutaFichaEmpresa = c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa,
+                        RutaGesInstructivos = c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos,
+                        RutaGesFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme,
+                        RutaSillabus = c.MaterialesAcademicos.First(d => d.Activo).Sillabus,
+                        RutaPpt = c.MaterialesAcademicos.First(d => d.Activo).Ppt,
+                        RutaEvaluaciones = c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones,
+                        RutaFacInstructivos = c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos,
+                        RutaFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme
                     } : new MaterialAcademico_O_DTO() )); // Lee
             
             //Documentacion
@@ -163,7 +176,9 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
                 .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.PerfilRelacionado != null ? c.PerfilRelacionado.Nombre : ""))
                 .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
-                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))));
+                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
+                .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
+                .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
         }
 
 

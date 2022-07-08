@@ -152,6 +152,10 @@ namespace Cenfotur.WebApi.Controllers
                             documentoDb.TdrFacilitador = fullPath;
                         }
                     }
+                    else
+                    {
+                        documentoDb.TdrFacilitador = documentoIDto.RutaTdrFacilitador;
+                    }
                     
                     if (documentoIDto.OsFacilitador != null)
                     {
@@ -162,6 +166,10 @@ namespace Cenfotur.WebApi.Controllers
                             await osFacilitador.CopyToAsync(fileStream);
                             documentoDb.OsFacilitador = fullPath;
                         }
+                    }
+                    else
+                    {
+                        documentoDb.OsFacilitador = documentoIDto.RutaOsFacilitador;
                     }
                     
                     if (documentoIDto.TdrGestor != null)
@@ -174,6 +182,10 @@ namespace Cenfotur.WebApi.Controllers
                             documentoDb.TdrGestor = fullPath;
                         }
                     }
+                    else
+                    {
+                        documentoDb.TdrGestor = documentoIDto.RutaTdrGestor;
+                    }
                     
                     if (documentoIDto.OsGestor != null)
                     {
@@ -185,6 +197,11 @@ namespace Cenfotur.WebApi.Controllers
                             documentoDb.OsGestor = fullPath;
                         }
                     }
+                    else
+                    {
+                        documentoDb.OsGestor = documentoIDto.RutaOsGestor;
+                    }
+                    
                     _context.Update(documentoDb);
                     await _context.SaveChangesAsync();
                     return NoContent();

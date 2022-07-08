@@ -162,6 +162,10 @@ namespace Cenfotur.WebApi.Controllers
                             participante.CertificadoTrabajo = fullPath;
                         }
                     }
+                    else
+                    {
+                        participante.CertificadoTrabajo = participanteIDto.RutaCertificadoTrabajo;
+                    }
                 
                     if (participanteIDto.CertificadoEstudios != null)
                     {
@@ -172,6 +176,10 @@ namespace Cenfotur.WebApi.Controllers
                             await certificadoEstudios.CopyToAsync(fileStream);
                             participante.CertificadoEstudios = fullPath;
                         }
+                    }
+                    else
+                    {
+                        participante.CertificadoEstudios = participanteIDto.RutaCertificadoEstudios;
                     }
                     
                     _context.Update(participante);

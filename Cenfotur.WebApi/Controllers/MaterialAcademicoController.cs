@@ -181,7 +181,7 @@ namespace Cenfotur.WebApi.Controllers
             
             try
             {
-                var Existe = await _context.Documentaciones.AnyAsync(e => e.DocumentacionId == id);
+                var Existe = await _context.MaterialesAcademicos.AnyAsync(e => e.MaterialAcademicoId == id);
                 if (Existe)
                 {
                     var materialAcademicoDb = _mapper.Map<MaterialAcademico>(materialAcademicoIDto);
@@ -204,6 +204,10 @@ namespace Cenfotur.WebApi.Controllers
                             materialAcademicoDb.FichaParticipante = fullPath;
                         }
                     }
+                    else
+                    {
+                        materialAcademicoDb.FichaParticipante = materialAcademicoIDto.RutaFichaParticipante;
+                    }
                     
                     if (materialAcademicoIDto.FichaEmpresa != null)
                     {
@@ -214,6 +218,10 @@ namespace Cenfotur.WebApi.Controllers
                             await fichaEmpresa.CopyToAsync(fileStream);
                             materialAcademicoDb.FichaEmpresa = fullPath;
                         }
+                    }
+                    else
+                    {
+                        materialAcademicoDb.FichaEmpresa = materialAcademicoIDto.RutaFichaEmpresa;
                     }
                     
                     if (materialAcademicoIDto.GesInstructivos != null)
@@ -226,6 +234,10 @@ namespace Cenfotur.WebApi.Controllers
                             materialAcademicoDb.GesInstructivos = fullPath;
                         }
                     }
+                    else
+                    {
+                        materialAcademicoDb.GesInstructivos = materialAcademicoIDto.RutaGesInstructivos;
+                    }
                     
                     if (materialAcademicoIDto.GesFormatoInforme != null)
                     {
@@ -236,6 +248,10 @@ namespace Cenfotur.WebApi.Controllers
                             await gesFormatoInforme.CopyToAsync(fileStream);
                             materialAcademicoDb.GesFormatoInforme = fullPath;
                         }
+                    }
+                    else
+                    {
+                        materialAcademicoDb.GesFormatoInforme = materialAcademicoIDto.RutaGesFormatoInforme;
                     }
                     
                     if (materialAcademicoIDto.Sillabus != null)
@@ -248,6 +264,10 @@ namespace Cenfotur.WebApi.Controllers
                             materialAcademicoDb.Sillabus = fullPath;
                         }
                     }
+                    else
+                    {
+                        materialAcademicoDb.Sillabus = materialAcademicoIDto.RutaSillabus;
+                    }
                     
                     if (materialAcademicoIDto.Ppt != null)
                     {
@@ -258,6 +278,10 @@ namespace Cenfotur.WebApi.Controllers
                             await ppt.CopyToAsync(fileStream);
                             materialAcademicoDb.Ppt = fullPath;
                         }
+                    }
+                    else
+                    {
+                        materialAcademicoDb.Ppt = materialAcademicoIDto.RutaPpt;
                     }
                     
                     if (materialAcademicoIDto.Evaluaciones != null)
@@ -270,6 +294,10 @@ namespace Cenfotur.WebApi.Controllers
                             materialAcademicoDb.Evaluaciones = fullPath;
                         }
                     }
+                    else
+                    {
+                        materialAcademicoDb.Evaluaciones = materialAcademicoIDto.RutaEvaluaciones;
+                    }
                     
                     if (materialAcademicoIDto.FacInstructivos != null)
                     {
@@ -280,6 +308,10 @@ namespace Cenfotur.WebApi.Controllers
                             await facInstructivos.CopyToAsync(fileStream);
                             materialAcademicoDb.FacInstructivos = fullPath;
                         }
+                    }
+                    else
+                    {
+                        materialAcademicoDb.FacInstructivos = materialAcademicoIDto.RutaFacInstructivos;
                     }
                     
                     if (materialAcademicoIDto.FacFormatoInforme != null)
@@ -292,6 +324,11 @@ namespace Cenfotur.WebApi.Controllers
                             materialAcademicoDb.FacFormatoInforme = fullPath;
                         }
                     }
+                    else
+                    {
+                        materialAcademicoDb.FacFormatoInforme = materialAcademicoIDto.RutaFacFormatoInforme;
+                    }
+                    
                     _context.Update(materialAcademicoDb);
                     await _context.SaveChangesAsync();
                     return NoContent();

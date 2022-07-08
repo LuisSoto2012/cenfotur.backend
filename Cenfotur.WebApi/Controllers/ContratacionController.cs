@@ -267,6 +267,10 @@ namespace Cenfotur.WebApi.Controllers
                         _Contratacion_1.ArchivoOrdenServicio = fullPath;
                     }
                 }
+                else
+                {
+                    _Contratacion_1.ArchivoOrdenServicio = _EmpleadoContratacion_VM.RutaOrdenServicio;
+                }
                 
                 _Context.Contrataciones.Update(_Contratacion_1);
                 await _Context.SaveChangesAsync();

@@ -90,7 +90,9 @@ namespace Cenfotur.Data.Contrataciones
                                 oContratacionListado_E.ArchivoOrdenServicio = Reader.IsDBNull(ArchivoOrdenServicio)
                                     ? ""
                                     :  Convert.ToBase64String(File.ReadAllBytes(Reader.GetString(ArchivoOrdenServicio)));
-
+                                oContratacionListado_E.RutaOrdenServicio =  Reader.IsDBNull(ArchivoOrdenServicio)
+                                    ? ""
+                                    :  Reader.GetString(ArchivoOrdenServicio);
                                 Lista.Add(oContratacionListado_E);
                             }
                             Conexion.Close();

@@ -70,5 +70,6 @@ namespace Cenfotur.Entidad.ViewModels.Contrataciones
         
         //Archivo
         public IFormFile ArchivoOrdenServicio { get; set; }
+        public string RutaOrdenServicio { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace Cenfotur.Entidad.Entidades.Contrataciones
         public string TotalContrataciones { get; set; }
         public string Habilitacion { get; set; }
         public string ArchivoOrdenServicio { get; set; }
+        public string RutaOrdenServicio { get; set; }
     }
 
 }
