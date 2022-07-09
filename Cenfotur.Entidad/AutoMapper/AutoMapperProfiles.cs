@@ -118,10 +118,10 @@ namespace Cenfotur.Entidad.AutoMapper
                     new Documentacion_O_DTO
                     {
                         DocumentacionId = c.Documentaciones.First(d => d.Activo).DocumentacionId, 
-                        ArchivoOsFacilitador = c.Documentaciones.First(d => d.Activo).OsFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsFacilitador)),
-                        ArchivoTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrFacilitador)),
-                        ArchivoTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrGestor)),
-                        ArchivoOsGestor = c.Documentaciones.First(d => d.Activo).OsGestor == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor)),
+                        ArchivoOsFacilitador = string.IsNullOrEmpty(c.Documentaciones.First(d => d.Activo).OsFacilitador) || c.Documentaciones.First(d => d.Activo).OsFacilitador == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsFacilitador)),
+                        ArchivoTdrFacilitador = string.IsNullOrEmpty(c.Documentaciones.First(d => d.Activo).TdrFacilitador) || c.Documentaciones.First(d => d.Activo).TdrFacilitador == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrFacilitador)),
+                        ArchivoTdrGestor = string.IsNullOrEmpty(c.Documentaciones.First(d => d.Activo).TdrGestor) || c.Documentaciones.First(d => d.Activo).TdrGestor == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).TdrGestor)),
+                        ArchivoOsGestor = string.IsNullOrEmpty(c.Documentaciones.First(d => d.Activo).OsGestor) || c.Documentaciones.First(d => d.Activo).OsGestor == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.Documentaciones.First(d => d.Activo).OsGestor)),
                         RutaOsFacilitador = c.Documentaciones.First(d => d.Activo).OsFacilitador,
                         RutaTdrFacilitador = c.Documentaciones.First(d => d.Activo).TdrFacilitador,
                         RutaTdrGestor = c.Documentaciones.First(d => d.Activo).TdrGestor,
@@ -131,15 +131,15 @@ namespace Cenfotur.Entidad.AutoMapper
                     new MaterialAcademico_O_DTO
                     {
                         MaterialAcademicoId = c.MaterialesAcademicos.First(d => d.Activo).MaterialAcademicoId, 
-                        ArchivoFichaParticipante = c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante)),
-                        ArchivoFichaEmpresa = c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa)),
-                        ArchivoGesInstructivos = c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos)),
-                        ArchivoGesFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme)),
-                        ArchivoSillabus = c.MaterialesAcademicos.First(d => d.Activo).Sillabus == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Sillabus)),
-                        ArchivoPpt = c.MaterialesAcademicos.First(d => d.Activo).Ppt == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Ppt)),
-                        ArchivoEvaluaciones = c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones)),
-                        ArchivoFacInstructivos = c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos)),
-                        ArchivoFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme)),
+                        ArchivoFichaParticipante = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante) || c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante)),
+                        ArchivoFichaEmpresa = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa) || c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa)),
+                        ArchivoGesInstructivos = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos) || c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos)),
+                        ArchivoGesFormatoInforme = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme) || c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).GesFormatoInforme)),
+                        ArchivoSillabus = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).Sillabus) || c.MaterialesAcademicos.First(d => d.Activo).Sillabus == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Sillabus)),
+                        ArchivoPpt = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).Ppt) || c.MaterialesAcademicos.First(d => d.Activo).Ppt == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Ppt)),
+                        ArchivoEvaluaciones = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones) || c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones)),
+                        ArchivoFacInstructivos = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos) || c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos)),
+                        ArchivoFacFormatoInforme = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme) || c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme)),
                         RutaFichaParticipante = c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante,
                         RutaFichaEmpresa = c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa,
                         RutaGesInstructivos = c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos,
@@ -175,8 +175,8 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
                 .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.PerfilRelacionado != null ? c.PerfilRelacionado.Nombre : ""))
-                .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
-                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo == null ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
+                .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoEstudios) || c.CertificadoEstudios == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
+                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
                 .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
         }
