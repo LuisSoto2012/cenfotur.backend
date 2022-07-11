@@ -90,6 +90,11 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<Alcance, Alcance_C_DTO>();
             CreateMap<Cargo, Cargo_C_DTO>();
             CreateMap<TipoRemuneracion, TipoRemuneracion_C_DTO>();
+            CreateMap<Categoria, Categoria_C_DTO>();
+            CreateMap<Clase, Clase_C_DTO>();
+            CreateMap<Dicertur, Dicertur_C_DTO>();
+            CreateMap<Referencia, Referencia_C_DTO>();
+            CreateMap<Rubro, Rubro_C_DTO>();
             
             //Capacitaciones
             CreateMap<Capacitacion_I_DTO, Capacitacion>()
@@ -179,6 +184,20 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
                 .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
+            
+            //Empresa
+            CreateMap<Empresa_I_DTO, Empresa>()
+                .ForMember(r => r.WebInscrita, x => x.MapFrom(c => string.Join(",",c.WebInscrita)));
+            CreateMap<Empresa, Empresa_O_DTO>()
+                .ForMember(r => r.Rubro, x => x.MapFrom(c => c.Rubro != null ? c.Rubro.Nombre : ""))
+                .ForMember(r => r.Dicertur, x => x.MapFrom(c => c.Dicertur != null ? c.Dicertur.Nombre : ""))
+                .ForMember(r => r.Clase, x => x.MapFrom(c => c.Clase != null ? c.Clase.Nombre : ""))
+                .ForMember(r => r.Categoria, x => x.MapFrom(c => c.Categoria != null ? c.Categoria.Nombre : ""))
+                .ForMember(r => r.Referencia, x => x.MapFrom(c => c.Referencia != null ? c.Referencia.Nombre : ""))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
+                .ForMember(r => r.WebInscrita, x => x.MapFrom(c => c.WebInscrita.Split(",", StringSplitOptions.None)));
         }
 
 

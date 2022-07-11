@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Cenfotur.Data;
 using Cenfotur.Entidad.DTOS.Output;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -135,6 +133,51 @@ namespace Cenfotur.WebApi.Controllers
                 .ToListAsync();
 
             return remuneracionesDb.Select(x => _mapper.Map<TipoRemuneracion_C_DTO>(x));
+        }
+        
+        [HttpGet("Clases")]
+        public async Task<IEnumerable<Clase_C_DTO>> GetClases()
+        {
+            var clasesDb = await _context.Clases.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return clasesDb.Select(x => _mapper.Map<Clase_C_DTO>(x));
+        }
+        
+        [HttpGet("Categorias")]
+        public async Task<IEnumerable<Categoria_C_DTO>> GetCategorias()
+        {
+            var categoriasDb = await _context.Categorias.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return categoriasDb.Select(x => _mapper.Map<Categoria_C_DTO>(x));
+        }
+        
+        [HttpGet("Referencias")]
+        public async Task<IEnumerable<Referencia_C_DTO>> GetReferencias()
+        {
+            var referenciasDb = await _context.Referencias.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return referenciasDb.Select(x => _mapper.Map<Referencia_C_DTO>(x));
+        }
+        
+        [HttpGet("Rubros")]
+        public async Task<IEnumerable<Rubro_C_DTO>> GetRubros()
+        {
+            var rubrosDb = await _context.Rubros.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return rubrosDb.Select(x => _mapper.Map<Rubro_C_DTO>(x));
+        }
+        
+        [HttpGet("Dicerturs")]
+        public async Task<IEnumerable<Dicertur_C_DTO>> GetDicerturs()
+        {
+            var dicertursDb = await _context.Dicerturs.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return dicertursDb.Select(x => _mapper.Map<Dicertur_C_DTO>(x));
         }
     }
 }
