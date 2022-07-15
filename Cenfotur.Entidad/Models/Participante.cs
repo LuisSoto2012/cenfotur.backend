@@ -26,12 +26,6 @@ namespace Cenfotur.Entidad.Models
         public string TelefonoMovil { get; set; }
         [Column("CorreoElectronico", TypeName = "varchar(50)")]
         public string CorreoElectronico { get; set; }
-        [Column("Ruc", TypeName = "varchar(50)")]
-        public string Ruc { get; set; }
-        [Column("RazonSocial", TypeName = "varchar(200)")]
-        public string RazonSocial { get; set; }
-        [Column("NombreComercial", TypeName = "varchar(200)")]
-        public string NombreComercial { get; set; }
         [Column("DomicilioActual", TypeName = "varchar(200)")]
         public string DomicilioActual { get; set; }
         public string DepartamentoId { get; set; }
@@ -71,8 +65,6 @@ namespace Cenfotur.Entidad.Models
         public string TipoDiscapacidad { get; set; }
         [Column("Codigo", TypeName = "varchar(20)")]
         public string Codigo { get; set; }
-        [Column("TelefonoFijo", TypeName = "varchar(50)")]
-        public string TelefonoFijo { get; set; }
         [Column("ExperienciaLaboralGeneral", TypeName = "varchar(100)")]
         public string ExperienciaLaboralGeneral { get; set; }
         [Column("ExperienciaLaboralPerfil", TypeName = "varchar(100)")]
@@ -87,6 +79,9 @@ namespace Cenfotur.Entidad.Models
         public TipoRemuneracion TipoRemuneracion { get; set; }
         public decimal? Remuneracion { get; set; }
         public bool? AceptaCorreosOtros { get; set; }
+
+        public int? EmpresaId { get; set; }
+        public Empresa Empresa { get; set; }
         
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }

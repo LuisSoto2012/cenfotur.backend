@@ -1,6 +1,7 @@
 // Empresa.cs21:1821:18
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,8 +18,9 @@ namespace Cenfotur.Entidad.Models
         public string RazonSocial { get; set; }
         [Column("NombreComercial", TypeName = "varchar(200)")]
         public string NombreComercial { get; set; }
-        [Column("TipoContribuyente", TypeName = "varchar(50)")]
-        public string TipoContribuyente { get; set; }
+
+        public int? TipoContribuyenteId { get; set; }
+        public TipoContribuyente TipoContribuyente { get; set; }
         public int? RubroId { get; set; }
         public Rubro Rubro { get; set; }
         public int? DicerturId { get; set; }
@@ -42,8 +44,6 @@ namespace Cenfotur.Entidad.Models
         public string Codigo { get; set; }
         [Column("TelefonoFijo", TypeName = "varchar(20)")]
         public string TelefonoFijo { get; set; }
-        [Column("TelefonoMovil", TypeName = "varchar(20)")]
-        public string TelefonoMovil { get; set; }
         [Column("PaginaWeb", TypeName = "varchar(50)")]
         public string PaginaWeb { get; set; }
         [Column("WebInscrita", TypeName = "varchar(200)")]
@@ -60,5 +60,7 @@ namespace Cenfotur.Entidad.Models
         public DateTime? FechaModificacion { get; set; }
         
         public bool Activo { get; set; }
+        
+        public List<Participante> Participantes { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public string RazonSocial { get; set; }
         public string NombreComercial { get; set; }
         public string TipoContribuyente { get; set; }
+        public int? TipoContribuyenteId { get; set; }
         public int? RubroId { get; set; }
         public int? DicerturId { get; set; }
         public int? ClaseId { get; set; }
@@ -30,5 +31,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public int? UsuarioModificacionId { get; set; }
 
         public bool Activo { get; set; }
+
+        public int ParticipanteId { get; set; }
     }
 }

@@ -46,6 +46,7 @@ namespace Cenfotur.Data
         public DbSet<Alcance> Alcances { get; set; }
         public DbSet<Cargo> Cargos { get; set; }
         public DbSet<TipoRemuneracion> TiposRemuneraciones { get; set; }
+        public DbSet<TipoContribuyente> TiposContribuyentes { get; set; }
 
         public DbSet<Rubro> Rubros { get; set; }
         public DbSet<Dicertur> Dicerturs { get; set; }

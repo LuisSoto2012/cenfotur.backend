@@ -66,6 +66,8 @@ namespace Cenfotur.WebApi.Controllers
                 {
                     EmpleadoId = 0,
                     ParticipanteId = participante.ParticipanteId,
+                    EmpresaId = participante.EmpresaId ?? 0,
+                    DepartamentoId = participante.DepartamentoId,
                     Usuario = participante.Usuario,
                     Nombres = participante.Nombres,
                     ApePaterno = participante.ApellidoPaterno,

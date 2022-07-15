@@ -11,6 +11,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string Ruc { get; set; }
         public string RazonSocial { get; set; }
         public string NombreComercial { get; set; }
+        public int? TipoContribuyenteId { get; set; }
         public string TipoContribuyente { get; set; }
         public int? RubroId { get; set; }
         public string Rubro { get; set; }

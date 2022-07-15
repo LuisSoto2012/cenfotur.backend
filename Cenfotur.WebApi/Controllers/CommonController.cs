@@ -179,5 +179,14 @@ namespace Cenfotur.WebApi.Controllers
 
             return dicertursDb.Select(x => _mapper.Map<Dicertur_C_DTO>(x));
         }
+        
+        [HttpGet("TiposContribuyente")]
+        public async Task<IEnumerable<TipoContribuyente_C_DTO>> GetTiposContribuyente()
+        {
+            var tiposContribuyenteDb = await _context.TiposContribuyentes.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return tiposContribuyenteDb.Select(x => _mapper.Map<TipoContribuyente_C_DTO>(x));
+        }
     }
 }

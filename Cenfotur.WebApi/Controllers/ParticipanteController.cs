@@ -109,9 +109,26 @@ namespace Cenfotur.WebApi.Controllers
                     }
                 }
                 
+                //Empresa
+                if (!string.IsNullOrEmpty(participanteIDto.Ruc) && !string.IsNullOrEmpty(participanteIDto.RazonSocial))
+                {
+                    //Crear empresa
+                    var empresaNueva = new Empresa
+                    {
+                        Ruc = participanteIDto.Ruc,
+                        RazonSocial = participanteIDto.RazonSocial,
+                        NombreComercial = participanteIDto.NombreComercial,
+                        TelefonoFijo = participanteIDto.TelefonoFijo
+                    };
+                    _context.Add(empresaNueva);
+                    await _context.SaveChangesAsync();
+                    participanteNuevo.EmpresaId = empresaNueva.EmpresaId;
+                }
+                
                 _context.Add(participanteNuevo);
                 
                 await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
             }
             catch (Exception e)

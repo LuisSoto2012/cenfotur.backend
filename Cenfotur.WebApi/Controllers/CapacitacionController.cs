@@ -127,6 +127,43 @@ namespace Cenfotur.WebApi.Controllers
             }
         }
         
+        [HttpPut("cambiarEstado/{Id:int}")]
+        public async Task<ActionResult> CambiarEstado(int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (string.IsNullOrEmpty(Id.ToString()) == true)
+            {
+                return BadRequest("El Id es invalido");
+            }
+
+            try
+            {
+                var Existe = await _context.Capacitaciones.AnyAsync(e => e.CapacitacionId == Id);
+                if (Existe)
+                {
+                    var capacitacion = await _context.Capacitaciones.FirstOrDefaultAsync(x => x.CapacitacionId == Id);
+                    if (capacitacion == null)
+                    {
+                        return NotFound("Capacitacion no existe");
+                    }
+
+                    capacitacion.Activo = !capacitacion.Activo;
+                    _context.Update(capacitacion);
+                    await _context.SaveChangesAsync();
+                    return NoContent();
+                }
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
         [HttpDelete("{id:int}/{usuarioModificacionId:int}")]
         public async Task<ActionResult> Delete(int id, int usuarioModificacionId)
         {

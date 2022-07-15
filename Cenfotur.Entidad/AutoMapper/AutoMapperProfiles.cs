@@ -95,6 +95,7 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<Dicertur, Dicertur_C_DTO>();
             CreateMap<Referencia, Referencia_C_DTO>();
             CreateMap<Rubro, Rubro_C_DTO>();
+            CreateMap<TipoContribuyente, TipoContribuyente_C_DTO>();
             
             //Capacitaciones
             CreateMap<Capacitacion_I_DTO, Capacitacion>()
@@ -197,6 +198,7 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
+                .ForMember(r => r.TipoContribuyente, x => x.MapFrom(c => c.TipoContribuyente != null ? c.TipoContribuyente.Nombre : ""))
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => c.WebInscrita.Split(",", StringSplitOptions.None)));
         }
 

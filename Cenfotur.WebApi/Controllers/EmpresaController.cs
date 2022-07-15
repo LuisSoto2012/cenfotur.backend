@@ -37,6 +37,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.Departamento)
                 .Include(x => x.Provincia)
                 .Include(x => x.Distrito)
+                .Include(x => x.TipoContribuyente)
                 .OrderByDescending(x => x.FechaCreacion).ToListAsync();
             return empresasDb.Select(c => _mapper.Map<Empresa_O_DTO>(c));
         }
@@ -52,7 +53,9 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.Referencia)
                 .Include(x => x.Departamento)
                 .Include(x => x.Provincia)
-                .Include(x => x.Distrito).FirstOrDefaultAsync(x => x.EmpresaId == id);
+                .Include(x => x.Distrito)
+                .Include(x => x.TipoContribuyente)
+                .FirstOrDefaultAsync(x => x.EmpresaId == id);
 
             if (Empresa == null)
             {
@@ -77,6 +80,21 @@ namespace Cenfotur.WebApi.Controllers
                 _context.Add(empresaNueva);
                 
                 await _context.SaveChangesAsync();
+                
+                //Participante
+                var participanteDb =
+                    await _context.Participantes.FirstOrDefaultAsync(x => x.ParticipanteId == empresaIDto.ParticipanteId);
+                if (participanteDb != null)
+                {
+                    //Crear relacion
+                    participanteDb.EmpresaId = empresaNueva.EmpresaId;
+                    _context.Update(participanteDb);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return NotFound($"Participante con Id {empresaIDto.ParticipanteId} no existe.");
+                }
             }
             catch (Exception e)
             {
