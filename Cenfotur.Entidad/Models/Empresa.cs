@@ -32,8 +32,7 @@ namespace Cenfotur.Entidad.Models
         public int Horas { get; set; }
         [Column("Direccion", TypeName = "varchar(200)")]
         public string Direccion { get; set; }
-        public int? ReferenciaId { get; set; }
-        public Referencia Referencia { get; set; }
+        public string Referencia { get; set; }
         public string DepartamentoId { get; set; }
         public Departamento Departamento { get; set; }
         public string ProvinciaId { get; set; }
@@ -49,6 +48,10 @@ namespace Cenfotur.Entidad.Models
         [Column("WebInscrita", TypeName = "varchar(200)")]
         public string WebInscrita { get; set; }
         public bool AceptaCorreosOtros { get; set; }
+        [Column("CorreoElectronico", TypeName = "varchar(200)")]
+        public string CorreoElectronico { get; set; }
+        [Column("TelefonoMovil", TypeName = "varchar(20)")]
+        public string TelefonoMovil { get; set; }
         
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }

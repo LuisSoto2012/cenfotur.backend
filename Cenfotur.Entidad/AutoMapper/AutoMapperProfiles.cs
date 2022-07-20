@@ -68,7 +68,8 @@ namespace Cenfotur.Entidad.AutoMapper
 
 
             CreateMap<Curso_I_DTO, Curso>(); // Inserta
-            CreateMap<Curso, Curso_O_DTO>(); // Lee
+            CreateMap<Curso, Curso_O_DTO>()
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.PerfilRelacionado != null ? e.PerfilRelacionado.Nombre : "")); // Lee
             
             
             //Comunes
@@ -194,7 +195,6 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.Dicertur, x => x.MapFrom(c => c.Dicertur != null ? c.Dicertur.Nombre : ""))
                 .ForMember(r => r.Clase, x => x.MapFrom(c => c.Clase != null ? c.Clase.Nombre : ""))
                 .ForMember(r => r.Categoria, x => x.MapFrom(c => c.Categoria != null ? c.Categoria.Nombre : ""))
-                .ForMember(r => r.Referencia, x => x.MapFrom(c => c.Referencia != null ? c.Referencia.Nombre : ""))
                 .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))

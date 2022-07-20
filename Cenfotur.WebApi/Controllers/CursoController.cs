@@ -30,7 +30,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet] // api/cursos
         public async Task<IEnumerable<Curso_O_DTO>> Get()
         {
-            var cursosDb = await _context.Cursos.OrderByDescending(c => c.FechaCreacion).ToListAsync();
+            var cursosDb = await _context.Cursos.Include(c => c.PerfilRelacionado).OrderByDescending(c => c.FechaCreacion).ToListAsync();
             return cursosDb.Select(c => _mapper.Map<Curso_O_DTO>(c));
         }
         

@@ -23,7 +23,6 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string Categoria { get; set; }
         public int Horas { get; set; }
         public string Direccion { get; set; }
-        public int? ReferenciaId { get; set; }
         public string Referencia { get; set; }
         public string DepartamentoId { get; set; }
         public string Departamento { get; set; }
@@ -37,6 +36,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string PaginaWeb { get; set; }
         public string[] WebInscrita { get; set; }
         public bool AceptaCorreosOtros { get; set; }
+        public string CorreoElectronico { get; set; }
         
         public int UsuarioCreacionId { get; set; }
         public DateTime? FechaCreacion { get; set; }
