@@ -76,7 +76,7 @@ namespace Cenfotur.WebApi.Controllers
                     Token = "",
                     Success = true,
                     Message = "Bienvenido a CENFOTUR",
-
+                    PerfilRelacionadoId = participante.PerfilRelacionadoId ?? 0,
                     Roles,
                     Modulos
 

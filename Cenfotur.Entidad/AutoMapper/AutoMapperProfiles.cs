@@ -186,7 +186,18 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
                 .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
-            
+
+            CreateMap<Capacitacion, RegistroPostulacion_O_DTO>()
+                .ForMember(r => r.NombreCurso, x => x.MapFrom(c => c.Curso.Nombre))
+                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Curso.Horas))
+                .ForMember(r => r.HorasMinimas, x => x.MapFrom(c => c.Curso.HorasAprobar))
+                .ForMember(r => r.Facilitador,
+                    x => x.MapFrom(c =>
+                        c.Facilitador != null
+                            ? string.Concat(c.Facilitador.Nombres, " ", c.Facilitador.ApellidoPaterno, " ",
+                                c.Facilitador.ApellidoMaterno).ToUpper()
+                            : ""))
+                .ForMember(r => r.Estado, x => x.MapFrom(c => "Activo"));
             //Empresa
             CreateMap<Empresa_I_DTO, Empresa>()
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => string.Join(",",c.WebInscrita)));

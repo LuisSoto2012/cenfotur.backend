@@ -249,5 +249,24 @@ namespace Cenfotur.WebApi.Controllers
                 throw;
             }
         }
+
+        [HttpGet("RegistroPostulacion/{idPerfilRelacionado:int}")]
+        public async Task<IEnumerable<RegistroPostulacion_O_DTO>> RegistroPostulacion([FromRoute]int idPerfilRelacionado)
+        {
+            var capacitacionesDb = await _context.Capacitaciones
+                .Include(c => c.Ubigeo.Provincia)
+                .Include(c => c.Ubigeo.Departamento)
+                .Include(c => c.Facilitador)
+                .Include(c => c.Gestor)
+                .Include(c => c.Curso)
+                .ThenInclude(cu => cu.PerfilRelacionado)
+                .Include(c => c.TipoCapacitacion)
+                .Include(c => c.Documentaciones)
+                .Include(c => c.MaterialesAcademicos)
+                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado)
+                .ToListAsync();
+            
+            return capacitacionesDb.Select(c => _mapper.Map<RegistroPostulacion_O_DTO>(c));
+        }
     }
 }
