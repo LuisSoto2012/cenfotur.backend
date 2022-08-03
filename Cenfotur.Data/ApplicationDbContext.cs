@@ -55,12 +55,15 @@ namespace Cenfotur.Data
         public DbSet<Referencia> Referencias { get; set; }
 
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<ParticipanteCapacitacion> ParticipanteCapacitacion { get; set; }
 
         // Esto se crea para poder agregar 2 key a una tabla es la unica manera 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EmpleadoRol>().HasKey(er => new { er.EmpleadoId, er.RolId });
             //modelbuilder.Entity<RolSubModulo>().HasKey(rs => new { rs.RolId, rs.SubModuloId }); //No se puede colocar id a una tabla muchos a muchos
+
+            modelBuilder.Entity<ParticipanteCapacitacion>().HasKey(pc => new { pc.ParticipanteId, pc.CapacitacionId });
             
             modelBuilder.Entity<Capacitacion>()
                 .HasOne<Distrito>(s => s.Ubigeo)

@@ -268,5 +268,55 @@ namespace Cenfotur.WebApi.Controllers
             
             return capacitacionesDb.Select(c => _mapper.Map<RegistroPostulacion_O_DTO>(c));
         }
+
+        [HttpPost("RegistroCapacitacion")]
+        public async Task<ActionResult> RegistroCapacitacion([FromBody]RegistroCapacitacion_I_DTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                //Buscar capacitacion
+                if (dto.Estado == "P")
+                {
+                    var nuevoRegistro = new ParticipanteCapacitacion
+                    {
+                        ParticipanteId = dto.ParticipanteId,
+                        CapacitacionId = dto.CapacitacionId,
+                        Estado = dto.Estado,
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacionId = dto.UsuarioId
+                    };
+
+                    _context.Add(nuevoRegistro);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var registroDb = await _context.ParticipanteCapacitacion.FirstOrDefaultAsync(x =>
+                        x.ParticipanteId == dto.ParticipanteId
+                        && x.CapacitacionId == dto.CapacitacionId);
+
+                    if (registroDb != null)
+                    {
+                        registroDb.Estado = dto.Estado;
+                        registroDb.UsuarioModificacionId = dto.UsuarioId;
+                        registroDb.FechaModificacion = DateTime.Now;
+                        _context.Update(registroDb);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

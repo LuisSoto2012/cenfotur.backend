@@ -1,6 +1,7 @@
 // Participante.cs00:0700:07
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -95,5 +96,6 @@ namespace Cenfotur.Entidad.Models
 
         public bool Activo { get; set; }
         
+        public ICollection<ParticipanteCapacitacion> ParticipanteCapacitacion { get; set; }
     }
 }

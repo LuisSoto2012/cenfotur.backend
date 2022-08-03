@@ -211,6 +211,8 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
                 .ForMember(r => r.TipoContribuyente, x => x.MapFrom(c => c.TipoContribuyente != null ? c.TipoContribuyente.Nombre : ""))
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => c.WebInscrita.Split(",", StringSplitOptions.None)));
+            
+            //ParticipanteCapacitacion
         }
 
 

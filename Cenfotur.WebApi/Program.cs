@@ -2,6 +2,7 @@ using Cenfotur.Data;
 using Cenfotur.Entidad.AutoMapper;
 using Cenfotur.Entidad.ViewModels;
 using Cenfotur.WebApi;
+using Cenfotur.WebApi.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +63,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
+        CreateHostBuilder(args).Build().MigrateDatabase<ApplicationDbContext>().Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
