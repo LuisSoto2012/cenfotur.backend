@@ -66,6 +66,28 @@ namespace Cenfotur.WebApi.Controllers
             return _mapper.Map<Participante_O_DTO>(Participante);
         }
         
+        [HttpGet("ListadoPorCapacitacion/{idCapacitacion:int}")]
+        public async Task<IEnumerable<Participante_O_DTO>> ListadoPorCapacitacion([FromRoute]int idCapacitacion)
+        {
+            var listaDb = await _context.Participantes
+                .Include(c => c.TipoDocumento)
+                .Include(c => c.Departamento)
+                .Include(c => c.Sexo)
+                .Include(c => c.EstadoCivil)
+                .Include(c => c.NivelEducativo)
+                .Include(c => c.Alcance)
+                .Include(c => c.CargoOperativo)
+                .Include(c => c.CargoDirectivo)
+                .Include(c => c.TipoRemuneracion)
+                .Include(c => c.Distrito)
+                .Include(c => c.Provincia)
+                .Include(c => c.PerfilRelacionado)
+                .Include(c => c.ParticipanteCapacitacion)
+                .Where(x => x.ParticipanteCapacitacion.Any(pc => pc.CapacitacionId == idCapacitacion))
+                .ToListAsync();
+
+            return listaDb.Select(c => _mapper.Map<Participante_O_DTO>(c));;
+        }
         
         [HttpPost] // Crea
         public async Task<ActionResult> Post([FromForm]Participante_I_DTO participanteIDto)
