@@ -272,8 +272,8 @@ namespace Cenfotur.WebApi.Controllers
             }
         }
 
-        [HttpGet("RegistroPostulacion/{idPerfilRelacionado:int}")]
-        public async Task<IEnumerable<RegistroPostulacion_O_DTO>> RegistroPostulacion([FromRoute]int idPerfilRelacionado)
+        [HttpGet("RegistroPostulacion")]
+        public async Task<IEnumerable<RegistroPostulacion_O_DTO>> RegistroPostulacion([FromQuery]int idPerfilRelacionado, [FromQuery]int idParticipante)
         {
             var capacitacionesDb = await _context.Capacitaciones
                 .Include(c => c.Ubigeo.Provincia)
@@ -285,10 +285,13 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.TipoCapacitacion)
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
-                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado)
+                .Include(c => c.ParticipanteCapacitacion)
+                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && c.ParticipanteCapacitacion.Any(p => p.ParticipanteId == idParticipante))
                 .ToListAsync();
             
             return capacitacionesDb.Select(c => _mapper.Map<RegistroPostulacion_O_DTO>(c));
+            
+            
         }
 
         [HttpPost("RegistroCapacitacion")]

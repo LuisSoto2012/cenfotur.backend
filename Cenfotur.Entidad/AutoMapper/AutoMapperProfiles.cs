@@ -197,7 +197,24 @@ namespace Cenfotur.Entidad.AutoMapper
                             ? string.Concat(c.Facilitador.Nombres, " ", c.Facilitador.ApellidoPaterno, " ",
                                 c.Facilitador.ApellidoMaterno).ToUpper()
                             : ""))
-                .ForMember(r => r.Estado, x => x.MapFrom(c => "Activo"));
+                .ForMember(r => r.Estado, x => x.MapFrom(c => "Activo"))
+                .ForMember(r => r.TipoCapacitacionId, x => x.MapFrom(c => c.TipoCapacitacionId))
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion.Nombre))
+                .ForMember(r => r.HorasMinimas, x => x.MapFrom(c => c.Curso.HorasAprobar))
+                .ForMember(r => r.Final, x => x.MapFrom(c => c.Curso.Final))
+                .ForMember(r => r.Practica, x => x.MapFrom(c => c.Curso.Practica))
+                .ForMember(r => r.PracticaNoAplica, x => x.MapFrom(c => c.Curso.PracticaNoAplica))
+                .ForMember(r => r.Practica2, x => x.MapFrom(c => c.Curso.Practica2))
+                .ForMember(r => r.PracticaNoAplica2, x => x.MapFrom(c => c.Curso.PracticaNoAplica2))
+                .ForMember(r => r.Practica3, x => x.MapFrom(c => c.Curso.Practica3))
+                .ForMember(r => r.PracticaNoAplica3, x => x.MapFrom(c => c.Curso.PracticaNoAplica3))
+                .ForMember(r => r.Practica4, x => x.MapFrom(c => c.Curso.Practica4))
+                .ForMember(r => r.PracticaNoAplica4, x => x.MapFrom(c => c.Curso.PracticaNoAplica4))
+                .ForMember(r => r.Practica5, x => x.MapFrom(c => c.Curso.Practica5))
+                .ForMember(r => r.PracticaNoAplica5, x => x.MapFrom(c => c.Curso.PracticaNoAplica5))
+                .ForMember(r => r.DesempenioNoAplica, x => x.MapFrom(c => c.Curso.DesempenioNoAplica))
+                .ForMember(r => r.FinalNoAplica, x => x.MapFrom(c => c.Curso.FinalNoAplica))
+                .ForMember(r => r.PostuladoAceptado, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any(p => p.Estado == "P" || p.Estado == "A") ? true : false));
             //Empresa
             CreateMap<Empresa_I_DTO, Empresa>()
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => string.Join(",",c.WebInscrita)));
