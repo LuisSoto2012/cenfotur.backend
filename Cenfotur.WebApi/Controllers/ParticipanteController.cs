@@ -7,8 +7,10 @@ using AutoMapper;
 using Cenfotur.Data;
 using Cenfotur.Entidad.DTOS.Input;
 using Cenfotur.Entidad.DTOS.Output;
+using Cenfotur.Entidad.Entidades.Participantes;
 using Cenfotur.Entidad.Models;
 using Cenfotur.Entidad.ViewModels;
+using Cenfotur.Negocio.Negocios.Participantes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,13 @@ namespace Cenfotur.WebApi.Controllers
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _archivoSettings = archivoSettings.Value ?? throw new ArgumentNullException(nameof(archivoSettings));
+        }
+        
+        [HttpGet("estadistica_1")] // api/cursos
+        public List<ParticipanteEstadistica_1_E> Estadistica_1([FromQuery]int idCapacitacion)
+        {
+            ParticipanteEstadistica_1_N obj = new();
+            return obj.ParticipanteEstadistica_1(idCapacitacion);
         }
         
         [HttpGet] // api/capacitaciones
@@ -286,12 +295,10 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
                 .Include(c => c.ParticipanteCapacitacion)
-                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && c.ParticipanteCapacitacion.Any(p => p.ParticipanteId == idParticipante))
+                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && (!c.ParticipanteCapacitacion.Any() || c.ParticipanteCapacitacion.Any(p => p.ParticipanteId == idParticipante)))
                 .ToListAsync();
             
             return capacitacionesDb.Select(c => _mapper.Map<RegistroPostulacion_O_DTO>(c));
-            
-            
         }
 
         [HttpPost("RegistroCapacitacion")]
@@ -307,16 +314,30 @@ namespace Cenfotur.WebApi.Controllers
                 //Buscar capacitacion
                 if (dto.Estado == "P")
                 {
-                    var nuevoRegistro = new ParticipanteCapacitacion
-                    {
-                        ParticipanteId = dto.ParticipanteId,
-                        CapacitacionId = dto.CapacitacionId,
-                        Estado = dto.Estado,
-                        FechaCreacion = DateTime.Now,
-                        UsuarioCreacionId = dto.UsuarioId
-                    };
+                    var registroDb = await _context.ParticipanteCapacitacion.FirstOrDefaultAsync(x =>
+                        x.ParticipanteId == dto.ParticipanteId
+                        && x.CapacitacionId == dto.CapacitacionId);
 
-                    _context.Add(nuevoRegistro);
+                    if (registroDb != null)
+                    {
+                        registroDb.Estado = dto.Estado;
+                        registroDb.UsuarioModificacionId = dto.UsuarioId;
+                        registroDb.FechaModificacion = DateTime.Now;
+                        _context.Update(registroDb);
+                    }
+                    else
+                    {
+                        var nuevoRegistro = new ParticipanteCapacitacion
+                        {
+                            ParticipanteId = dto.ParticipanteId,
+                            CapacitacionId = dto.CapacitacionId,
+                            Estado = dto.Estado,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacionId = dto.UsuarioId
+                        };
+
+                        _context.Add(nuevoRegistro);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 else
@@ -332,6 +353,34 @@ namespace Cenfotur.WebApi.Controllers
                         registroDb.FechaModificacion = DateTime.Now;
                         _context.Update(registroDb);
                         await _context.SaveChangesAsync();
+                        
+                        //actualizar empresa
+                        var participanteDb =
+                            await _context.Participantes.FirstOrDefaultAsync(
+                                x => x.ParticipanteId == dto.ParticipanteId);
+                        if (participanteDb != null)
+                        {
+                            int? empresaId = participanteDb.EmpresaId;
+                            if (empresaId.HasValue)
+                            {
+                                var empresaDb =
+                                    await _context.Empresas.FirstOrDefaultAsync(x => x.EmpresaId == empresaId);
+                                if (empresaDb != null)
+                                {
+                                    var capacitacionDb =
+                                        await _context.Capacitaciones.Include(c => c.Curso).FirstOrDefaultAsync(x =>
+                                            x.CapacitacionId == dto.CapacitacionId);
+                                    if (capacitacionDb != null)
+                                    {
+                                        empresaDb.NombreCurso = capacitacionDb.Curso.Nombre;
+                                        empresaDb.Horas = capacitacionDb.Curso.Horas;
+                                        
+                                        _context.Update(empresaDb);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -342,6 +391,45 @@ namespace Cenfotur.WebApi.Controllers
                 Console.WriteLine(e);
                 throw;
             }
+        }
+        
+        [HttpGet("ListadoPorCapacitacionPostuladoAceptado")]
+        public async Task<IEnumerable<ParticipantePostulado_O_DTO>> ListadoPorCapacitacionPostuladoAceptado([FromQuery]int idCapacitacion)
+        {
+            var listaDb = await _context.ParticipanteCapacitacion
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.TipoDocumento)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Departamento)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Sexo)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.EstadoCivil)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.NivelEducativo)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Alcance)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.CargoOperativo)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.CargoDirectivo)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.TipoRemuneracion)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Distrito)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Provincia)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.PerfilRelacionado)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.ParticipanteCapacitacion)
+                .Include(pc => pc.Participante)
+                .ThenInclude(c => c.Empresa)
+                .Where(x => x.CapacitacionId == idCapacitacion)
+                .Select(x => x.Participante)
+                .ToListAsync();
+
+            return listaDb.Select(c => _mapper.Map<ParticipantePostulado_O_DTO>(c));;
         }
     }
 }

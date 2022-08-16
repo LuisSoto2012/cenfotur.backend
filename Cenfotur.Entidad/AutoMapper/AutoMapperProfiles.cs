@@ -186,6 +186,26 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
                 .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
+            CreateMap<Participante, ParticipantePostulado_O_DTO>()
+                .ForMember(r => r.Ruc, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Ruc : ""))
+                .ForMember(r => r.TipoDocumento, x => x.MapFrom(c => c.TipoDocumento != null ? c.TipoDocumento.Nombre : ""))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.PerfilRelacionado != null ? c.PerfilRelacionado.Nombre : ""))
+                .ForMember(r => r.Sexo, x => x.MapFrom(c => c.Sexo != null ? c.Sexo.Nombre : ""))
+                .ForMember(r => r.EstadoCivil, x => x.MapFrom(c => c.EstadoCivil != null ? c.EstadoCivil.Nombre : ""))
+                .ForMember(r => r.NivelEducativo, x => x.MapFrom(c => c.NivelEducativo != null ? c.NivelEducativo.Nombre : ""))
+                .ForMember(r => r.Alcance, x => x.MapFrom(c => c.Alcance != null ? c.Alcance.Nombre : ""))
+                .ForMember(r => r.CargoOperativo, x => x.MapFrom(c => c.CargoOperativo != null ? c.CargoOperativo.Nombre : ""))
+                .ForMember(r => r.CargoDirectivo, x => x.MapFrom(c => c.CargoDirectivo != null ? c.CargoDirectivo.Nombre : ""))
+                .ForMember(r => r.TipoRemuneracion, x => x.MapFrom(c => c.TipoRemuneracion != null ? c.TipoRemuneracion.Nombre : ""))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.PerfilRelacionado != null ? c.PerfilRelacionado.Nombre : ""))
+                .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoEstudios) || c.CertificadoEstudios == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
+                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
+                .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
+                .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo))
+                .ForMember(r => r.EstadoCapacitacion, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any() ? c.ParticipanteCapacitacion.First().Estado : ""));
 
             CreateMap<Capacitacion, RegistroPostulacion_O_DTO>()
                 .ForMember(r => r.NombreCurso, x => x.MapFrom(c => c.Curso.Nombre))
@@ -214,7 +234,8 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.PracticaNoAplica5, x => x.MapFrom(c => c.Curso.PracticaNoAplica5))
                 .ForMember(r => r.DesempenioNoAplica, x => x.MapFrom(c => c.Curso.DesempenioNoAplica))
                 .ForMember(r => r.FinalNoAplica, x => x.MapFrom(c => c.Curso.FinalNoAplica))
-                .ForMember(r => r.PostuladoAceptado, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any(p => p.Estado == "P" || p.Estado == "A") ? true : false));
+                .ForMember(r => r.PostuladoAceptado, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any(p => p.Estado == "P" || p.Estado == "A") ? true : false))
+                .ForMember(r => r.PracticaTotal, x => x.MapFrom(c => c.Curso.Practica ?? 0 + c.Curso.Practica2 ?? 0 + c.Curso.Practica3 ?? 0 + c.Curso.Practica4 ?? 0 + c.Curso.Practica5));
             //Empresa
             CreateMap<Empresa_I_DTO, Empresa>()
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => string.Join(",",c.WebInscrita)));

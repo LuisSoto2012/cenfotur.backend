@@ -27,5 +27,6 @@ namespace Cenfotur.Entidad.DTOS.Output
         public bool DesempenioNoAplica { get; set; }
         public bool FinalNoAplica { get; set; }
         public bool PostuladoAceptado { get; set; }
+        public decimal PracticaTotal { get; set; }
     }
 }

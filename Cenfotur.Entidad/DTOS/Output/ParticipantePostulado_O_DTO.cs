@@ -1,10 +1,8 @@
-// Participacion_O_DTO.cs12:5812:58
-
 using System;
 
 namespace Cenfotur.Entidad.DTOS.Output
 {
-    public class Participante_O_DTO
+    public class ParticipantePostulado_O_DTO
     {
         public int ParticipanteId { get; set; }
         public string ApellidoPaterno { get; set; }
@@ -61,6 +59,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string TipoRemuneracion { get; set; }
         public decimal? Remuneracion { get; set; }
         public bool? AceptaCorreosOtros { get; set; }
-        
+
+        public string EstadoCapacitacion { get; set; }   
     }
 }
