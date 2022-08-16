@@ -431,5 +431,181 @@ namespace Cenfotur.WebApi.Controllers
 
             return listaDb.Select(c => _mapper.Map<ParticipantePostulado_O_DTO>(c));;
         }
+
+        [HttpGet("DatosEncuesta")]
+        public async Task<ActionResult<EncuenstaDatos_O_DTO>> GetDatosEncuesta([FromQuery] int participanteId,
+            [FromQuery] int capacitacionId)
+        {
+            //Validaciones
+            var participanteDb =
+                await _context.Participantes.Include(x => x.Distrito).FirstOrDefaultAsync(p => p.ParticipanteId == participanteId);
+            if (participanteDb == null)
+            {
+                return BadRequest("No existe un participante con ese Id");
+            }
+
+            var capacitacionDb =
+                await _context.Capacitaciones.Include(x => x.Facilitador).FirstOrDefaultAsync(p => p.CapacitacionId == capacitacionId);
+            if (capacitacionDb == null)
+            {
+                return BadRequest("No existe una capacitación con ese Id");
+            }
+            
+            try
+            {
+                var facilitador = string.Concat(capacitacionDb.Facilitador.ApellidoPaterno, " ", capacitacionDb.Facilitador.ApellidoMaterno, ", ", capacitacionDb.Facilitador.Nombres);
+                var encuestaRegistrada = await _context.EncuestaSatisfaccion.AnyAsync(x =>
+                    x.ParticipanteId == participanteId && x.CapacitacionId == capacitacionId);
+                var datos = new EncuenstaDatos_O_DTO(participanteDb.Distrito.Nombre, facilitador.ToUpper(), encuestaRegistrada);
+
+                return Ok(datos);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpPost("RegistroEncuesta")]
+        public async Task<ActionResult> RegistroEncuesta([FromBody] RegistroEncuentra_I_DTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                //Validaciones
+                var participanteDb =
+                    await _context.Participantes.FirstOrDefaultAsync(p => p.ParticipanteId == dto.ParticipanteId);
+                if (participanteDb == null)
+                {
+                    return BadRequest("No existe un participante con ese Id");
+                }
+
+                dto.DistritoId = participanteDb.DistritoId;
+
+                var capacitacionDb =
+                    await _context.Capacitaciones.FirstOrDefaultAsync(p => p.CapacitacionId == dto.CapacitacionId);
+                if (capacitacionDb == null)
+                {
+                    return BadRequest("No existe una capacitación con ese Id");
+                }
+
+                dto.FacilitadorId = capacitacionDb.FacilitadorId;
+
+                var encuentra = _mapper.Map<EncuestaSatisfaccion>(dto);
+
+                _context.Add(encuentra);
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet("ObtenerCapacitacion/{participanteId:int}")]
+        public async Task<int> ObtenerCapacitacionId([FromRoute] int participanteId)
+        {
+            var capacitacionDb =
+                await _context.ParticipanteCapacitacion.FirstOrDefaultAsync(x =>
+                    x.ParticipanteId == participanteId && x.Estado == "A");
+            return capacitacionDb?.CapacitacionId ?? 0;
+        }
+        
+        [HttpGet("Asistencia")]
+        public async Task<ActionResult<IEnumerable<Asistencia_O_DTO>>> GetAsistencia([FromQuery] int capacitacionId,
+            [FromQuery] int? participanteId)
+        {
+            //Validaciones
+            
+            var capacitacionDb =
+                await _context.Capacitaciones.FirstOrDefaultAsync(p => p.CapacitacionId == capacitacionId);
+            if (capacitacionDb == null)
+            {
+                return BadRequest("No existe una capacitación con ese Id");
+            }
+
+            if (participanteId.HasValue)
+            {
+                var participanteDb =
+                    await _context.Participantes.FirstOrDefaultAsync(p => p.ParticipanteId == participanteId.Value);
+                if (participanteDb == null)
+                {
+                    return BadRequest("No existe un participante con ese Id");
+                }
+            }
+
+            var asistenciaDb = await _context.Asistencia.Include(a => a.Participante).Where(x =>
+                x.CapacitacionId == capacitacionId &&
+                (!participanteId.HasValue || x.ParticipanteId == participanteId.Value)).OrderBy(x => x.ParticipanteId).ThenBy(x => x.FechaAsistencia).ToListAsync();
+
+            var listaAsistencia = new List<Asistencia_O_DTO>();
+
+            var actualParticipanteId = 0;
+            var dto = new Asistencia_O_DTO();
+            dto.Fechas = new List<FechaAsistencia_O_DTO>();
+            foreach (var data in asistenciaDb)
+            {
+                if (data.ParticipanteId != actualParticipanteId)
+                {
+                    if (actualParticipanteId != 0)
+                    {
+                        dto = new Asistencia_O_DTO();
+                        dto.Fechas = new List<FechaAsistencia_O_DTO>();
+                    }
+                    dto.NumeroDocumento = data.Participante.NumeroDocumento;
+                    dto.Participante = string.Concat(data.Participante.ApellidoPaterno, " ",
+                        data.Participante.ApellidoMaterno, ", ", data.Participante.Nombres).ToUpper();
+                    actualParticipanteId = data.ParticipanteId;
+                }
+
+                var fechaDto = new FechaAsistencia_O_DTO();
+                fechaDto.Fecha = data.FechaAsistencia;
+                fechaDto.Asistio = data.Asistio;
+                dto.Fechas.Add(fechaDto);
+            }
+
+            return listaAsistencia.OrderBy(x => x.Participante).ToList();
+        }
+        
+        [HttpGet("Notas")]
+        public async Task<ActionResult<IEnumerable<Nota_O_DTO>>> GetNotas([FromQuery] int capacitacionId,
+            [FromQuery] int? participanteId)
+        {
+            //Validaciones
+            
+            var capacitacionDb =
+                await _context.Capacitaciones.FirstOrDefaultAsync(p => p.CapacitacionId == capacitacionId);
+            if (capacitacionDb == null)
+            {
+                return BadRequest("No existe una capacitación con ese Id");
+            }
+
+            if (participanteId.HasValue)
+            {
+                var participanteDb =
+                    await _context.Participantes.FirstOrDefaultAsync(p => p.ParticipanteId == participanteId.Value);
+                if (participanteDb == null)
+                {
+                    return BadRequest("No existe un participante con ese Id");
+                }
+            }
+
+            var notasDb = await _context.Notas.Include(a => a.Participante).Where(x =>
+                x.CapacitacionId == capacitacionId &&
+                (!participanteId.HasValue || x.ParticipanteId == participanteId.Value)).ToListAsync();
+
+            var listaMap = notasDb.Select(x => _mapper.Map<Nota_O_DTO>(x)).OrderBy(x => x.Participante).ToList();
+
+            return listaMap;
+        }
     }
 }

@@ -97,5 +97,8 @@ namespace Cenfotur.Entidad.Models
         public bool Activo { get; set; }
         
         public ICollection<ParticipanteCapacitacion> ParticipanteCapacitacion { get; set; }
+        public ICollection<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }
+        public ICollection<Asistencia> Asistencia { get; set; }
+        public ICollection<Nota> Notas { get; set; }
     }
 }

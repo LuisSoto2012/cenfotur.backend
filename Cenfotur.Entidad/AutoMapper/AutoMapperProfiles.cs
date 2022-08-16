@@ -251,6 +251,15 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.WebInscrita, x => x.MapFrom(c => c.WebInscrita.Split(",", StringSplitOptions.None)));
             
             //ParticipanteCapacitacion
+            
+            //EncuestaSatisfaccion
+            CreateMap<RegistroEncuentra_I_DTO, EncuestaSatisfaccion>()
+                .ForMember(r => r.FechaCreacion, x => x.MapFrom(c => DateTime.Now));
+            
+            //Notas
+            CreateMap<Nota, Nota_O_DTO>()
+                .ForMember(r => r.NumeroDocumento, x => x.MapFrom(c => c.Participante.NumeroDocumento))
+                .ForMember(r => r.Participante, x => x.MapFrom(c => string.Concat(c.Participante.ApellidoPaterno, " ", c.Participante.ApellidoMaterno, ", ", c.Participante.Nombres)));
         }
 
 
