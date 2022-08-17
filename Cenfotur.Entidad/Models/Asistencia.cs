@@ -6,6 +6,7 @@ namespace Cenfotur.Entidad.Models
 {
     public class Asistencia
     {
+        public int AsistenciaId { get; set; }
         [Required]
         public int ParticipanteId { get; set; }
         [Required]

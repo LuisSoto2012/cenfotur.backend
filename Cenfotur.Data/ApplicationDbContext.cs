@@ -69,9 +69,7 @@ namespace Cenfotur.Data
             modelBuilder.Entity<ParticipanteCapacitacion>().HasKey(pc => new { pc.ParticipanteId, pc.CapacitacionId });
             
             modelBuilder.Entity<EncuestaSatisfaccion>().HasKey(pc => new { pc.ParticipanteId, pc.CapacitacionId });
-            
-            modelBuilder.Entity<Asistencia>().HasKey(pc => new { pc.ParticipanteId, pc.CapacitacionId });
-            
+
             modelBuilder.Entity<Nota>().HasKey(pc => new { pc.ParticipanteId, pc.CapacitacionId });
             
             modelBuilder.Entity<Capacitacion>()

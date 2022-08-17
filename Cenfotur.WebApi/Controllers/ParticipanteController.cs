@@ -565,6 +565,7 @@ namespace Cenfotur.WebApi.Controllers
                     dto.Participante = string.Concat(data.Participante.ApellidoPaterno, " ",
                         data.Participante.ApellidoMaterno, ", ", data.Participante.Nombres).ToUpper();
                     actualParticipanteId = data.ParticipanteId;
+                    listaAsistencia.Add(dto);
                 }
 
                 var fechaDto = new FechaAsistencia_O_DTO();
