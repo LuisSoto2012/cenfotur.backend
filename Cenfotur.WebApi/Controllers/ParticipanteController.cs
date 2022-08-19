@@ -353,7 +353,7 @@ namespace Cenfotur.WebApi.Controllers
                         registroDb.FechaModificacion = DateTime.Now;
                         _context.Update(registroDb);
                         await _context.SaveChangesAsync();
-                        
+
                         //actualizar empresa
                         var participanteDb =
                             await _context.Participantes.FirstOrDefaultAsync(
@@ -377,6 +377,47 @@ namespace Cenfotur.WebApi.Controllers
                                         
                                         _context.Update(empresaDb);
                                         await _context.SaveChangesAsync();
+                                        
+                                        if (dto.Estado == "A")
+                                        {
+                                            //Crear Asistencia
+                                            var asistenciaRows = new List<Asistencia>();
+
+                                            for (var dt = capacitacionDb.FechaInicio; dt <= capacitacionDb.FechaFin; dt = dt.AddDays(1))
+                                            {
+                                                var asistenciaRow = new Asistencia
+                                                {
+                                                    ParticipanteId = dto.ParticipanteId,
+                                                    CapacitacionId = dto.CapacitacionId,
+                                                    FechaAsistencia = dt.Date,
+                                                    Asistio = false,
+                                                    UsuarioCreacionId = dto.UsuarioId,
+                                                    FechaCreacion = DateTime.Now
+                                                };
+                                                asistenciaRows.Add(asistenciaRow);
+                                            }
+
+                                            if (asistenciaRows.Any()) _context.AddRange(asistenciaRows);
+
+                                            //Crear Nota
+                                            var notaRow = new Nota
+                                            {
+                                                ParticipanteId = dto.ParticipanteId,
+                                                CapacitacionId = dto.CapacitacionId,
+                                                Ee = "0",
+                                                Ep = "0",
+                                                Ed = "0",
+                                                Ef = "0",
+                                                Nf = "0",
+                                                Letras = "Cero",
+                                                UsuarioCreacionId = dto.UsuarioId,
+                                                FechaCreacion = DateTime.Now
+                                            };
+
+                                            _context.Add(notaRow);
+
+                                            await _context.SaveChangesAsync();
+                                        }
                                     }
                                 }
                             }
