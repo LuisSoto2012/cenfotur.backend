@@ -649,5 +649,113 @@ namespace Cenfotur.WebApi.Controllers
 
             return listaMap;
         }
+
+        [HttpGet("descargar-registros/{participanteId:int}")]
+        public async Task<ActionResult<RegistrosParticipante_O_DTO>> DescargarRegistros([FromRoute]int participanteId)
+        {
+            try
+            {
+                var participanteDb = await _context.Participantes.FirstOrDefaultAsync(x =>
+                    x.ParticipanteId == participanteId);
+
+                if (participanteDb != null)
+                {
+                    var registros = new RegistrosParticipante_O_DTO();
+
+                    registros.PlantillaRegistroParticipante = Convert.ToBase64String(System.IO.File.ReadAllBytes(_archivoSettings.RegistroParticipante));
+                    registros.PlantillaRegistroEmpresa = Convert.ToBase64String(System.IO.File.ReadAllBytes(_archivoSettings.RegistroEmpresa));
+                    registros.RegistroParticipante =
+                        string.IsNullOrEmpty(participanteDb.RegistroParticipante) ||
+                        participanteDb.RegistroParticipante == "null"
+                            ? null
+                            : Convert.ToBase64String(System.IO.File.ReadAllBytes(participanteDb.RegistroParticipante)); 
+                    registros.RegistroEmpresa =
+                        string.IsNullOrEmpty(participanteDb.RegistroParticipante) ||
+                        participanteDb.RegistroEmpresa == "null"
+                            ? null
+                            : Convert.ToBase64String(System.IO.File.ReadAllBytes(participanteDb.RegistroEmpresa));
+                
+                    return registros;
+                }
+
+                return NotFound("No existe un participante con ese Id.");
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpPut("cargar-registros/{participanteId:int}")]
+        public async Task<ActionResult> CargarRegistros([FromForm]RegistrosParticipante_I_DTO dto, [FromRoute]int participanteId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (string.IsNullOrEmpty(participanteId.ToString()) == true)
+            {
+                return BadRequest("El Id es invalido");
+            }
+            
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
+            {
+                var participanteDb = await _context.Participantes.FirstOrDefaultAsync(x =>
+                    x.ParticipanteId == participanteId);
+                
+                if (participanteDb != null)
+                {
+                    var ruta = @$"{_archivoSettings.RutaParticipantes}{participanteDb.NumeroDocumento}\Registros\";
+                    if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
+                
+                    if (dto.RegistroParticipante != null)
+                    {
+                        var registroParticipante = dto.RegistroParticipante;
+                        var fullPath = string.Concat(ruta, registroParticipante.FileName);
+                        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            await registroParticipante.CopyToAsync(fileStream);
+                            participanteDb.RegistroParticipante = fullPath;
+                        }
+                    }
+                    
+                    if (dto.RegistroEmpresa != null)
+                    {
+                        var registroEmpresa = dto.RegistroEmpresa;
+                        var fullPath = string.Concat(ruta, registroEmpresa.FileName);
+                        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            await registroEmpresa.CopyToAsync(fileStream);
+                            participanteDb.RegistroEmpresa = fullPath;
+                        }
+                    }
+                    
+                    _context.Update(participanteDb);
+
+                    await _context.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
+                    
+                    return NoContent();
+                }
+
+                return NotFound("No existe un participante con ese Id.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            // Carga de Archivo
+
+            
+            
+            
+        }
     }
 }

@@ -96,6 +96,11 @@ namespace Cenfotur.Entidad.Models
 
         public bool Activo { get; set; }
         
+        [Column("RegistroParticipante", TypeName = "varchar(200)")]
+        public string RegistroParticipante { get; set; }
+        [Column("RegistroEmpresa", TypeName = "varchar(200)")]
+        public string RegistroEmpresa { get; set; }
+        
         public ICollection<ParticipanteCapacitacion> ParticipanteCapacitacion { get; set; }
         public ICollection<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }
         public ICollection<Asistencia> Asistencia { get; set; }
