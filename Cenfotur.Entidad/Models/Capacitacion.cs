@@ -46,5 +46,6 @@ namespace Cenfotur.Entidad.Models
         public ICollection<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }
         public ICollection<Asistencia> Asistencia { get; set; }
         public ICollection<Nota> Notas { get; set; }
+        public ICollection<FacilitadorArchivo> FacilitadorArchivos { get; set; }
     }
 }

@@ -602,6 +602,9 @@ namespace Cenfotur.WebApi.Controllers
                         dto = new Asistencia_O_DTO();
                         dto.Fechas = new List<FechaAsistencia_O_DTO>();
                     }
+
+                    dto.ParticipanteId = data.ParticipanteId;
+                    dto.CapacitacionId = data.CapacitacionId;
                     dto.NumeroDocumento = data.Participante.NumeroDocumento;
                     dto.Participante = string.Concat(data.Participante.ApellidoPaterno, " ",
                         data.Participante.ApellidoMaterno, ", ", data.Participante.Nombres).ToUpper();
@@ -750,12 +753,6 @@ namespace Cenfotur.WebApi.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-            
-            // Carga de Archivo
-
-            
-            
-            
         }
     }
 }

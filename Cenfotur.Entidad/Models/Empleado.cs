@@ -68,6 +68,7 @@ namespace Cenfotur.Entidad.Models
 
         // Para relacion mucho a muchos
         public ICollection<EmpleadoRol> EmpleadoRol { get; set; }
+        public ICollection<FacilitadorArchivo> FacilitadorArchivos { get; set; }
 
 
         public List<Contratacion> Contrataciones { get; set; } // Uno a muchos Contratación es el hijo'

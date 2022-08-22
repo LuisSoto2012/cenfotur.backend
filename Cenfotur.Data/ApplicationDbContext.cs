@@ -59,6 +59,7 @@ namespace Cenfotur.Data
         public DbSet<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }
         public DbSet<Asistencia> Asistencia { get; set; }
         public DbSet<Nota> Notas { get; set; }
+        public DbSet<FacilitadorArchivo> FacilitadorArchivos { get; set; }
 
         // Esto se crea para poder agregar 2 key a una tabla es la unica manera 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
