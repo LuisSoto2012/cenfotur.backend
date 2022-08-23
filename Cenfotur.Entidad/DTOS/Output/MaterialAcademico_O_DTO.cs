@@ -14,6 +14,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string ArchivoEvaluaciones { get; set; }
         public string ArchivoFacInstructivos { get; set; }
         public string ArchivoFacFormatoInforme { get; set; }
+        public string ArchivoFichaAsistencia { get; set; }
         
         public string RutaFichaParticipante { get; set; }
         public string RutaFichaEmpresa { get; set; }
@@ -24,5 +25,6 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string RutaEvaluaciones { get; set; }
         public string RutaFacInstructivos { get; set; }
         public string RutaFacFormatoInforme { get; set; }
+        public string RutaFichaAsistencia { get; set; }
     }
 }

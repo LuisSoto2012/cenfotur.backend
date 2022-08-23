@@ -16,6 +16,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public IFormFile Evaluaciones { get; set; }
         public IFormFile FacInstructivos { get; set; }
         public IFormFile FacFormatoInforme { get; set; }
+        public IFormFile FichaAsistencia { get; set; }
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }
         public bool Activo { get; set; }
@@ -29,5 +30,6 @@ namespace Cenfotur.Entidad.DTOS.Input
         public string RutaEvaluaciones { get; set; }
         public string RutaFacInstructivos { get; set; }
         public string RutaFacFormatoInforme { get; set; }
+        public string RutaFichaAsistencia { get; set; }
     }
 }

@@ -31,6 +31,15 @@ namespace Cenfotur.WebApi.Controllers
             _archivoSettings = archivoSettings.Value ?? throw new ArgumentNullException(nameof(archivoSettings));
         }
 
+        [HttpGet("obtener-capacitacion/{facilitadorId:int}")]
+        public async Task<int> ObtenerCapacitacionId([FromRoute] int facilitadorId)
+        {
+            var capacitacionDb =
+                await _context.Capacitaciones.FirstOrDefaultAsync(x =>
+                    x.FacilitadorId == facilitadorId);
+            return capacitacionDb?.CapacitacionId ?? 0;
+        }
+        
         [HttpGet("listar-formatos/{facilitadorId:int}/{capacitacionId:int}")]
         public async Task<ActionResult<DocumentosFacilitador_O_DTO>> ListarFormatos([FromRoute]int facilitadorId, [FromRoute]int capacitacionId)
         {
@@ -68,7 +77,9 @@ namespace Cenfotur.WebApi.Controllers
                     docFacilitador.Evaluaciones = string.IsNullOrEmpty(materialesDb.Evaluaciones) || materialesDb.Evaluaciones == "null"
                         ? null
                         : Convert.ToBase64String(System.IO.File.ReadAllBytes(materialesDb.Evaluaciones));
-                    // TODO FichaAsistencia
+                    docFacilitador.FichaAsistencia = string.IsNullOrEmpty(materialesDb.FichaAsistencia) || materialesDb.FichaAsistencia == "null"
+                        ? null
+                        : Convert.ToBase64String(System.IO.File.ReadAllBytes(materialesDb.FichaAsistencia));
                     docFacilitador.FormatoInforme = string.IsNullOrEmpty(materialesDb.FacFormatoInforme) || materialesDb.FacFormatoInforme == "null"
                         ? null
                         : Convert.ToBase64String(System.IO.File.ReadAllBytes(materialesDb.FacFormatoInforme));
@@ -77,7 +88,19 @@ namespace Cenfotur.WebApi.Controllers
                         : Convert.ToBase64String(System.IO.File.ReadAllBytes(materialesDb.FacInstructivos));
                 }
                 
-                return Ok();
+                //Informe
+                var facilitadorAchivo = await _context.FacilitadorArchivos.FirstOrDefaultAsync(x =>
+                    x.FacilitadorId == facilitadorId && x.CapacitacionId == capacitacionId &&
+                    x.TipoArchivo == "INFORME");
+
+                if (facilitadorAchivo != null)
+                {
+                    docFacilitador.Informe = string.IsNullOrEmpty(facilitadorAchivo.Archivo) || facilitadorAchivo.Archivo == "null"
+                        ? null
+                        : Convert.ToBase64String(System.IO.File.ReadAllBytes(facilitadorAchivo.Archivo));
+                }
+                
+                return Ok(docFacilitador);
             }
             catch (Exception e)
             {

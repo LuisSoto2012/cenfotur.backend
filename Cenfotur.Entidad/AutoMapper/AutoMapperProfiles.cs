@@ -147,6 +147,7 @@ namespace Cenfotur.Entidad.AutoMapper
                         ArchivoEvaluaciones = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones) || c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones)),
                         ArchivoFacInstructivos = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos) || c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos)),
                         ArchivoFacFormatoInforme = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme) || c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme)),
+                        ArchivoFichaAsistencia = string.IsNullOrEmpty(c.MaterialesAcademicos.First(d => d.Activo).FichaAsistencia) || c.MaterialesAcademicos.First(d => d.Activo).FichaAsistencia == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.MaterialesAcademicos.First(d => d.Activo).FichaAsistencia)),
                         RutaFichaParticipante = c.MaterialesAcademicos.First(d => d.Activo).FichaParticipante,
                         RutaFichaEmpresa = c.MaterialesAcademicos.First(d => d.Activo).FichaEmpresa,
                         RutaGesInstructivos = c.MaterialesAcademicos.First(d => d.Activo).GesInstructivos,
@@ -155,7 +156,8 @@ namespace Cenfotur.Entidad.AutoMapper
                         RutaPpt = c.MaterialesAcademicos.First(d => d.Activo).Ppt,
                         RutaEvaluaciones = c.MaterialesAcademicos.First(d => d.Activo).Evaluaciones,
                         RutaFacInstructivos = c.MaterialesAcademicos.First(d => d.Activo).FacInstructivos,
-                        RutaFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme
+                        RutaFacFormatoInforme = c.MaterialesAcademicos.First(d => d.Activo).FacFormatoInforme,
+                        RutaFichaAsistencia = c.MaterialesAcademicos.First(d => d.Activo).FichaAsistencia
                     } : new MaterialAcademico_O_DTO() )); // Lee
             
             //Documentacion

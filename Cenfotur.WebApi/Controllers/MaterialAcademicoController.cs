@@ -150,6 +150,17 @@ namespace Cenfotur.WebApi.Controllers
                         materialAcademico.FacFormatoInforme = fullPath;
                     }
                 }
+                
+                if (materialAcademicoIDto.FichaAsistencia != null)
+                {
+                    var fichaAsistencia = materialAcademicoIDto.FichaAsistencia;
+                    var fullPath = string.Concat(ruta, fichaAsistencia.FileName);
+                    using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await fichaAsistencia.CopyToAsync(fileStream);
+                        materialAcademico.FichaAsistencia = fullPath;
+                    }
+                }
 
                 await _context.SaveChangesAsync();
                 
@@ -327,6 +338,21 @@ namespace Cenfotur.WebApi.Controllers
                     else
                     {
                         materialAcademicoDb.FacFormatoInforme = materialAcademicoIDto.RutaFacFormatoInforme;
+                    }
+                    
+                    if (materialAcademicoIDto.FichaAsistencia != null)
+                    {
+                        var facFichaAsistencia = materialAcademicoIDto.FichaAsistencia;
+                        var fullPath = string.Concat(ruta, facFichaAsistencia.FileName);
+                        using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            await facFichaAsistencia.CopyToAsync(fileStream);
+                            materialAcademicoDb.FichaAsistencia = fullPath;
+                        }
+                    }
+                    else
+                    {
+                        materialAcademicoDb.FichaAsistencia = materialAcademicoIDto.RutaFichaAsistencia;
                     }
                     
                     _context.Update(materialAcademicoDb);

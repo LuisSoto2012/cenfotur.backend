@@ -29,6 +29,8 @@ namespace Cenfotur.Entidad.Models
         public string FacInstructivos { get; set; }
         [Column("FacFormatoInforme", TypeName = "varchar(200)")]
         public string FacFormatoInforme { get; set; }
+        [Column("FichaAsistencia", TypeName = "varchar(200)")]
+        public string FichaAsistencia { get; set; }
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }
         [DataType(DataType.DateTime, ErrorMessage = "No tiene el formato de fecha necesario")]

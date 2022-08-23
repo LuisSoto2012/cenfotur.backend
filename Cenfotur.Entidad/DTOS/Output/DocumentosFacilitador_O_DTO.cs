@@ -12,5 +12,6 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string FichaAsistencia { get; set; }
         public string FormatoInforme { get; set; }
         public string Instructivo { get; set; }
+        public string Informe { get; set; }
     }
 }
