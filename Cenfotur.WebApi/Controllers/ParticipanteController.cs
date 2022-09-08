@@ -295,10 +295,20 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
                 .Include(c => c.ParticipanteCapacitacion)
-                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && (!c.ParticipanteCapacitacion.Any() || c.ParticipanteCapacitacion.Any(p => p.ParticipanteId == idParticipante)))
+                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado)
                 .ToListAsync();
+
+            var listaResult = new List<RegistroPostulacion_O_DTO>();
             
-            return capacitacionesDb.Select(c => _mapper.Map<RegistroPostulacion_O_DTO>(c));
+            foreach (var data in capacitacionesDb)
+            {
+                var dto = _mapper.Map<RegistroPostulacion_O_DTO>(data);
+                dto.PostuladoAceptado = data.ParticipanteCapacitacion.Any(p => p.ParticipanteId == idParticipante && (p.Estado == "P" || p.Estado == "A"));
+                listaResult.Add(dto);
+            }
+
+
+            return listaResult;
         }
 
         [HttpPost("RegistroCapacitacion")]

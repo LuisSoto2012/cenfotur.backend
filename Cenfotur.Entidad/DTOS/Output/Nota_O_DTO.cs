@@ -5,6 +5,7 @@ namespace Cenfotur.Entidad.DTOS.Output
     public class Nota_O_DTO
     {
         public string NumeroDocumento { get; set; }
+        public int ParticipanteId { get; set; }
         public string Participante { get; set; }
         public string Ee { get; set; }
         public string Ep { get; set; }

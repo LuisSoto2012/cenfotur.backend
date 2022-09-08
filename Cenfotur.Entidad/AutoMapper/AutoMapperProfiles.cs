@@ -236,7 +236,7 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.PracticaNoAplica5, x => x.MapFrom(c => c.Curso.PracticaNoAplica5))
                 .ForMember(r => r.DesempenioNoAplica, x => x.MapFrom(c => c.Curso.DesempenioNoAplica))
                 .ForMember(r => r.FinalNoAplica, x => x.MapFrom(c => c.Curso.FinalNoAplica))
-                .ForMember(r => r.PostuladoAceptado, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any(p => p.Estado == "P" || p.Estado == "A") ? true : false))
+                //.ForMember(r => r.PostuladoAceptado, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any(p => p.Estado == "P" || p.Estado == "A") ? true : false))
                 .ForMember(r => r.PracticaTotal, x => x.MapFrom(c => c.Curso.Practica ?? 0 + c.Curso.Practica2 ?? 0 + c.Curso.Practica3 ?? 0 + c.Curso.Practica4 ?? 0 + c.Curso.Practica5));
             //Empresa
             CreateMap<Empresa_I_DTO, Empresa>()

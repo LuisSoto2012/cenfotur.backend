@@ -269,7 +269,7 @@ namespace Cenfotur.WebApi.Controllers
         }
 
         [HttpPut("ActualizarNotas")]
-        public async Task<ActionResult> ActualizarNotas([FromBody] FacilitadorNotas_I_DTO dto)
+        public async Task<ActionResult> ActualizarNotas([FromBody] FacilitadorActualizarNotas_I_DTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -278,26 +278,33 @@ namespace Cenfotur.WebApi.Controllers
 
             try
             {
-                var registroDb = await _context.Notas.Include(n => n.Capacitacion.Curso).FirstOrDefaultAsync(x =>
-                    x.ParticipanteId == dto.ParticipanteId && x.CapacitacionId == dto.CapacitacionId);
+                var listaDto = dto.ParticipantesNotas;
 
-                if (registroDb != null)
+                if (listaDto.Any())
                 {
-                    registroDb.Ee = dto.Ee;
-                    registroDb.Ep = dto.Ep;
-                    registroDb.Ed = dto.Ed;
-                    registroDb.Ef = dto.Ef;
-                    registroDb.Ef = dto.Ef == "IPI" ? "IPI" : await CalcularNF(registroDb);
-                    registroDb.UsuarioModificacionId = dto.FacilitadorId;
-                    registroDb.FechaModificacion = DateTime.Now;
+                    foreach (var notaDto in listaDto)
+                    {
+                        var registroDb = await _context.Notas.Include(n => n.Capacitacion.Curso).FirstOrDefaultAsync(x =>
+                            x.ParticipanteId == notaDto.ParticipanteId && x.CapacitacionId == dto.CapacitacionId);
+                        
+                        if (registroDb != null)
+                        {
+                            registroDb.Ee = notaDto.Ee;
+                            registroDb.Ep = notaDto.Ep;
+                            registroDb.Ed = notaDto.Ed;
+                            registroDb.Ef = notaDto.Ef;
+                            registroDb.Nf = notaDto.Ef == "IPI" ? "IPI" : await CalcularNF(registroDb);
+                            registroDb.UsuarioModificacionId = dto.FacilitadorId;
+                            registroDb.FechaModificacion = DateTime.Now;
 
-                    _context.Update(registroDb);
-
+                            _context.Update(registroDb);
+                        }
+                    }
+                    
                     await _context.SaveChangesAsync();
-
                     return Ok();
                 }
-
+                
                 return NotFound("No se ha encontrado registro de Notas con dicho participante y capacitacioón");
             }
             catch (Exception e)
@@ -321,7 +328,7 @@ namespace Cenfotur.WebApi.Controllers
             var horasMin = cursoDb.HorasAprobar;
             var horasTotal = cursoDb.Horas;
             var totalDias = (notaDb.Capacitacion.FechaFin - notaDb.Capacitacion.FechaInicio).TotalDays;
-            var totalHorasPorDia = (int)(totalDias / horasTotal);
+            var totalHorasPorDia = (int)(horasTotal / totalDias);
             var totalAsistenciasNecesarias = (int) horasMin / totalHorasPorDia;  
             
             //Validar asistencia
