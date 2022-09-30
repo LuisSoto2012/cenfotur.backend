@@ -41,6 +41,8 @@ namespace Cenfotur.Entidad.Models
         
         public List<Documentacion> Documentaciones { get; set; }
         public List<MaterialAcademico> MaterialesAcademicos { get; set; }
+        public List<FichaSupervision> FichasSupervision { get; set; }
+        public List<Certificado> Certificados { get; set; }
         
         public ICollection<ParticipanteCapacitacion> ParticipanteCapacitacion { get; set; }
         public ICollection<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }

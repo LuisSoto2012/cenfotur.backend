@@ -97,6 +97,8 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<Referencia, Referencia_C_DTO>();
             CreateMap<Rubro, Rubro_C_DTO>();
             CreateMap<TipoContribuyente, TipoContribuyente_C_DTO>();
+            CreateMap<Programa, Programa_C_DTO>();
+            CreateMap<TipoSupervision, TipoSupervision_C_DTO>();
             
             //Capacitaciones
             CreateMap<Capacitacion_I_DTO, Capacitacion>()
@@ -187,7 +189,8 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoEstudios) || c.CertificadoEstudios == "null"  ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
-                .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo));
+                .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo))
+                .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))));
             CreateMap<Participante, ParticipantePostulado_O_DTO>()
                 .ForMember(r => r.Ruc, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Ruc : ""))
                 .ForMember(r => r.TipoDocumento, x => x.MapFrom(c => c.TipoDocumento != null ? c.TipoDocumento.Nombre : ""))
@@ -262,6 +265,30 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<Nota, Nota_O_DTO>()
                 .ForMember(r => r.NumeroDocumento, x => x.MapFrom(c => c.Participante.NumeroDocumento))
                 .ForMember(r => r.Participante, x => x.MapFrom(c => string.Concat(c.Participante.ApellidoPaterno, " ", c.Participante.ApellidoMaterno, ", ", c.Participante.Nombres)));
+            
+            //EncuestaSatisfaccion
+            CreateMap<FichaSupervision_I_DTO, FichaSupervision>()
+                .ForMember(r => r.Resultado, x => x.MapFrom(c => c.Calificacion <= 5 ? "MALO" : c.Calificacion <= 10 ? "DEFICIENTE" : c.Calificacion <= 14 ? "REGULAR": c.Calificacion <= 18 ? "BUENO" : "EXCELENTE"));
+            CreateMap<FichaSupervision, FichaSupervision_O_DTO>()
+                .ForMember(r => r.FechaSupervision, x => x.MapFrom(c => c.FechaSupervision.HasValue ? c.FechaSupervision.Value.ToString("yyyy-MM-dd") : ""))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Capacitacion != null ? c.Capacitacion.Curso.Nombre : ""))
+                .ForMember(r => r.Programa, x => x.MapFrom(c => c.Programa != null ? c.Programa.Nombre : ""))
+                .ForMember(r => r.Departamento,
+                    x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
+                .ForMember(r => r.Supervisor,
+                    x => x.MapFrom(c =>
+                        c.Supervisor == null
+                            ? ""
+                            : string.Concat(c.Supervisor.Nombres, " ", c.Supervisor.ApellidoPaterno, " ",
+                                c.Supervisor.ApellidoMaterno)))
+                .ForMember(r => r.Facilitador,
+                    x => x.MapFrom(c =>
+                        c.Facilitador == null
+                            ? ""
+                            : string.Concat(c.Facilitador.Nombres, " ", c.Facilitador.ApellidoPaterno, " ",
+                                c.Facilitador.ApellidoMaterno)))
+                .ForMember(r => r.TipoSupervision,
+                    x => x.MapFrom(c => c.TipoSupervision != null ? c.TipoSupervision.Nombre : ""));
         }
 
 

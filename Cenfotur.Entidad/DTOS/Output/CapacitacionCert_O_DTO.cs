@@ -1,15 +1,11 @@
-// Capacitacion_O_DTO.cs23:5923:59
-
 using System;
 using System.Collections.Generic;
-using Cenfotur.Entidad.Models;
 
 namespace Cenfotur.Entidad.DTOS.Output
 {
-    public class Capacitacion_O_DTO
+    public class CapacitacionCert_O_DTO
     {
         public int CapacitacionId { get; set; }
-        
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public int CursoId { get; set; }
@@ -40,7 +36,5 @@ namespace Cenfotur.Entidad.DTOS.Output
         public MaterialAcademico_O_DTO MaterialAcademico { get; set; }
         
         public bool Activo { get; set; }
-        
-        public List<Participante_O_DTO> Participantes { get; set; }
     }
 }

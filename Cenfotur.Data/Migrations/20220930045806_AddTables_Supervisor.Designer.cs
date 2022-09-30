@@ -4,6 +4,7 @@ using Cenfotur.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cenfotur.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220930045806_AddTables_Supervisor")]
+    partial class AddTables_Supervisor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,9 +104,6 @@ namespace Cenfotur.Data.Migrations
                     b.Property<int>("CapacitacionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FacilitadorId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("FechaAsistencia")
                         .HasColumnType("datetime2");
 
@@ -117,9 +116,6 @@ namespace Cenfotur.Data.Migrations
                     b.Property<int>("ParticipanteId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SupervisorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UsuarioCreacionId")
                         .HasColumnType("int");
 
@@ -130,11 +126,7 @@ namespace Cenfotur.Data.Migrations
 
                     b.HasIndex("CapacitacionId");
 
-                    b.HasIndex("FacilitadorId");
-
                     b.HasIndex("ParticipanteId");
-
-                    b.HasIndex("SupervisorId");
 
                     b.ToTable("Asistencia");
                 });
@@ -242,41 +234,6 @@ namespace Cenfotur.Data.Migrations
                     b.HasKey("CategoriaId");
 
                     b.ToTable("Categorias");
-                });
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Certificado", b =>
-                {
-                    b.Property<int>("CertificadoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CertificadoId"), 1L, 1);
-
-                    b.Property<int>("CapacitacionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Codigo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaCertificado")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ParticipanteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CertificadoId");
-
-                    b.HasIndex("CapacitacionId");
-
-                    b.HasIndex("ParticipanteId");
-
-                    b.ToTable("Certificados");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Clase", b =>
@@ -1232,9 +1189,6 @@ namespace Cenfotur.Data.Migrations
                         .HasColumnType("varchar(20)")
                         .HasColumnName("EP");
 
-                    b.Property<int?>("FacilitadorId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime");
 
@@ -1249,9 +1203,6 @@ namespace Cenfotur.Data.Migrations
                         .HasColumnType("varchar(20)")
                         .HasColumnName("NF");
 
-                    b.Property<int?>("SupervisorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UsuarioCreacionId")
                         .HasColumnType("int");
 
@@ -1261,10 +1212,6 @@ namespace Cenfotur.Data.Migrations
                     b.HasKey("ParticipanteId", "CapacitacionId");
 
                     b.HasIndex("CapacitacionId");
-
-                    b.HasIndex("FacilitadorId");
-
-                    b.HasIndex("SupervisorId");
 
                     b.ToTable("Notas");
                 });
@@ -1919,27 +1866,15 @@ namespace Cenfotur.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Cenfotur.Entidad.Models.Empleado", "Facilitador")
-                        .WithMany()
-                        .HasForeignKey("FacilitadorId");
-
                     b.HasOne("Cenfotur.Entidad.Models.Participante", "Participante")
                         .WithMany("Asistencia")
                         .HasForeignKey("ParticipanteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Cenfotur.Entidad.Models.Empleado", "Supervisor")
-                        .WithMany()
-                        .HasForeignKey("SupervisorId");
-
                     b.Navigation("Capacitacion");
 
-                    b.Navigation("Facilitador");
-
                     b.Navigation("Participante");
-
-                    b.Navigation("Supervisor");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Capacitacion", b =>
@@ -1977,25 +1912,6 @@ namespace Cenfotur.Data.Migrations
                     b.Navigation("TipoCapacitacion");
 
                     b.Navigation("Ubigeo");
-                });
-
-            modelBuilder.Entity("Cenfotur.Entidad.Models.Certificado", b =>
-                {
-                    b.HasOne("Cenfotur.Entidad.Models.Capacitacion", "Capacitacion")
-                        .WithMany("Certificados")
-                        .HasForeignKey("CapacitacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cenfotur.Entidad.Models.Participante", "Participante")
-                        .WithMany("Certificados")
-                        .HasForeignKey("ParticipanteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Capacitacion");
-
-                    b.Navigation("Participante");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Contratacion", b =>
@@ -2198,7 +2114,7 @@ namespace Cenfotur.Data.Migrations
             modelBuilder.Entity("Cenfotur.Entidad.Models.FichaSupervision", b =>
                 {
                     b.HasOne("Cenfotur.Entidad.Models.Capacitacion", "Capacitacion")
-                        .WithMany("FichasSupervision")
+                        .WithMany()
                         .HasForeignKey("CapacitacionId");
 
                     b.HasOne("Cenfotur.Entidad.Models.Departamento", "Departamento")
@@ -2262,27 +2178,15 @@ namespace Cenfotur.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Cenfotur.Entidad.Models.Empleado", "Facilitador")
-                        .WithMany()
-                        .HasForeignKey("FacilitadorId");
-
                     b.HasOne("Cenfotur.Entidad.Models.Participante", "Participante")
                         .WithMany("Notas")
                         .HasForeignKey("ParticipanteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Cenfotur.Entidad.Models.Empleado", "Supervisor")
-                        .WithMany()
-                        .HasForeignKey("SupervisorId");
-
                     b.Navigation("Capacitacion");
 
-                    b.Navigation("Facilitador");
-
                     b.Navigation("Participante");
-
-                    b.Navigation("Supervisor");
                 });
 
             modelBuilder.Entity("Cenfotur.Entidad.Models.Participante", b =>
@@ -2433,15 +2337,11 @@ namespace Cenfotur.Data.Migrations
                 {
                     b.Navigation("Asistencia");
 
-                    b.Navigation("Certificados");
-
                     b.Navigation("Documentaciones");
 
                     b.Navigation("EncuestaSatisfaccion");
 
                     b.Navigation("FacilitadorArchivos");
-
-                    b.Navigation("FichasSupervision");
 
                     b.Navigation("MaterialesAcademicos");
 
@@ -2489,8 +2389,6 @@ namespace Cenfotur.Data.Migrations
             modelBuilder.Entity("Cenfotur.Entidad.Models.Participante", b =>
                 {
                     b.Navigation("Asistencia");
-
-                    b.Navigation("Certificados");
 
                     b.Navigation("EncuestaSatisfaccion");
 

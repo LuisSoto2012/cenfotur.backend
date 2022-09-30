@@ -105,5 +105,7 @@ namespace Cenfotur.Entidad.Models
         public ICollection<EncuestaSatisfaccion> EncuestaSatisfaccion { get; set; }
         public ICollection<Asistencia> Asistencia { get; set; }
         public ICollection<Nota> Notas { get; set; }
+        
+        public List<Certificado> Certificados { get; set; }
     }
 }

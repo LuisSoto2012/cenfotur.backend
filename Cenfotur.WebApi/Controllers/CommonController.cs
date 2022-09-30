@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Cenfotur.Data;
 using Cenfotur.Entidad.DTOS.Output;
+using Cenfotur.Entidad.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -187,6 +188,24 @@ namespace Cenfotur.WebApi.Controllers
                 .ToListAsync();
 
             return tiposContribuyenteDb.Select(x => _mapper.Map<TipoContribuyente_C_DTO>(x));
+        }
+        
+        [HttpGet("Programa")]
+        public async Task<IEnumerable<Programa_C_DTO>> GetProgramas()
+        {
+            var programasDb = await _context.Programas.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return programasDb.Select(x => _mapper.Map<Programa_C_DTO>(x));
+        }
+        
+        [HttpGet("TipoSupervision")]
+        public async Task<IEnumerable<TipoSupervision_C_DTO>> GetTiposSupervision()
+        {
+            var tipoSupervisionDb = await _context.TiposSupervision.Where(x => x.Activo).OrderBy(x => x.Nombre)
+                .ToListAsync();
+
+            return tipoSupervisionDb.Select(x => _mapper.Map<TipoSupervision_C_DTO>(x));
         }
     }
 }

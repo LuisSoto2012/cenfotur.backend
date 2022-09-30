@@ -30,6 +30,10 @@ namespace Cenfotur.Entidad.Models
         [DataType(DataType.DateTime, ErrorMessage = "No tiene el formato de fecha necesario")]
         [Column(TypeName = "datetime")]
         public DateTime? FechaModificacion { get; set; }
+        public int? FacilitadorId { get; set; }
+        public Empleado Facilitador { get; set; }
+        public int? SupervisorId { get; set; }
+        public Empleado Supervisor { get; set; }
         
         // -- Relacion muchos a muchos --
         public Participante Participante { get; set; }

@@ -249,9 +249,10 @@ namespace Cenfotur.WebApi.Controllers
                         if (registroDb != null)
                         {
                             registroDb.Asistio = fechaDto.Asistio;
-                            registroDb.UsuarioModificacionId = dto.FacilitadorId;
                             registroDb.FechaModificacion = DateTime.Now;
-
+                            registroDb.SupervisorId = dto.SupervisorId.HasValue ? dto.SupervisorId.Value : registroDb.SupervisorId;
+                            registroDb.FacilitadorId = dto.FacilitadorId.HasValue ? dto.FacilitadorId.Value : registroDb.FacilitadorId;
+                            registroDb.UsuarioModificacionId = dto.FacilitadorId.HasValue ? dto.FacilitadorId.Value : dto.SupervisorId.HasValue ? dto.SupervisorId.Value : (int?)null;
                             _context.Update(registroDb);
                         }
                     }
@@ -294,7 +295,9 @@ namespace Cenfotur.WebApi.Controllers
                             registroDb.Ed = notaDto.Ed;
                             registroDb.Ef = notaDto.Ef;
                             registroDb.Nf = notaDto.Ef == "IPI" ? "IPI" : await CalcularNF(registroDb);
-                            registroDb.UsuarioModificacionId = dto.FacilitadorId;
+                            registroDb.SupervisorId = dto.SupervisorId.HasValue ? dto.SupervisorId.Value : registroDb.SupervisorId;
+                            registroDb.FacilitadorId = dto.FacilitadorId.HasValue ? dto.FacilitadorId.Value : registroDb.FacilitadorId;
+                            registroDb.UsuarioModificacionId = dto.FacilitadorId.HasValue ? dto.FacilitadorId.Value : dto.SupervisorId.HasValue ? dto.SupervisorId.Value : (int?)null;
                             registroDb.FechaModificacion = DateTime.Now;
 
                             _context.Update(registroDb);

@@ -61,6 +61,8 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string TipoRemuneracion { get; set; }
         public decimal? Remuneracion { get; set; }
         public bool? AceptaCorreosOtros { get; set; }
+
+        public string Certificado { get; set; }
         
     }
 }
