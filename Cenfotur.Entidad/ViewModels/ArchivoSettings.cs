@@ -8,5 +8,7 @@ namespace Cenfotur.Entidad.ViewModels
         public string RutaFacilitadores { get; set; }
         public string RegistroParticipante { get; set; }
         public string RegistroEmpresa { get; set; }
+        public string RutaCertificados { get; set; }
+        public string CertificadoPlantilla { get; set; }
     }
 }

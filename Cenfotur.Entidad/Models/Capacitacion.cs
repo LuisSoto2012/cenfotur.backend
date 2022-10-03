@@ -38,6 +38,7 @@ namespace Cenfotur.Entidad.Models
         public DateTime? FechaModificacion { get; set; }
         
         public bool Activo { get; set; }
+        public bool EstaCerrada { get; set; }
         
         public List<Documentacion> Documentaciones { get; set; }
         public List<MaterialAcademico> MaterialesAcademicos { get; set; }

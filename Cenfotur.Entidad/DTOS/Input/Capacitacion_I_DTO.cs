@@ -23,5 +23,6 @@ namespace Cenfotur.Entidad.DTOS.Input
         public DateTime? FechaModificacion { get; set; }
         
         public bool Activo { get; set; }
+        public bool EstaCerrada { get; set; }
     }
 }

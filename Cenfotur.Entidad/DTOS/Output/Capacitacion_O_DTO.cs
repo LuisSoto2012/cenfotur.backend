@@ -40,6 +40,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public MaterialAcademico_O_DTO MaterialAcademico { get; set; }
         
         public bool Activo { get; set; }
+        public bool EstaCerrada { get; set; }
         
         public List<Participante_O_DTO> Participantes { get; set; }
     }
