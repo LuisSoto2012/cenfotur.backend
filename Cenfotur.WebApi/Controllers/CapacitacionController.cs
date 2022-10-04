@@ -19,7 +19,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Drawing;
 using System.Globalization;
-using NetBarcode;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Barcode = NetBarcode.Barcode;
+using Font = System.Drawing.Font;
 using ImageFormat = System.Drawing.Imaging.ImageFormat;
 using Type = System.Type;
 
@@ -169,6 +172,7 @@ namespace Cenfotur.WebApi.Controllers
                             var ruta = @$"{_archivoSettings.RutaCertificados}{participante.Participante.NumeroDocumento}\{participante.CapacitacionId}\";
                             if (!Directory.Exists(ruta)) Directory.CreateDirectory(ruta);
                             var rutaCompleta = $"{ruta}{codigo}.jpg";
+                            var rutaCompletaPdf = $"{ruta}{codigo}.pdf";
                             nuevoCert.Ruta = rutaCompleta;
                             
                             var plantilla = _archivoSettings.CertificadoPlantilla;
@@ -176,7 +180,7 @@ namespace Cenfotur.WebApi.Controllers
                             var barcode = new Barcode(codigo, NetBarcode.Type.Code11, false, 670, 55);
                             string barcodeImgPath = $"{ruta}{codigo}_barcode.jpg";
                             barcode.SaveImageFile(barcodeImgPath);
-                            Image barcodeImg = Image.FromFile(barcodeImgPath);
+                            System.Drawing.Image barcodeImg = System.Drawing.Image.FromFile(barcodeImgPath);
 
                             PointF nombreLocation = new PointF(660f, 796f);
                             PointF cursoLocation = new PointF(608f, 1070f);
@@ -186,7 +190,7 @@ namespace Cenfotur.WebApi.Controllers
                             
                             // PointF secondLocation = participante.UserType.Contains("MEDICO") || participante.UserType.Contains("MÉDICO") ? 
                             //     new PointF(128f, 830f) : new PointF(110f, 830f) ;
-                            Bitmap bitmap = (Bitmap)Image.FromFile(plantilla);//load the image file
+                            Bitmap bitmap = (Bitmap)System.Drawing.Image.FromFile(plantilla);//load the image file
 
                             using (Graphics graphics = Graphics.FromImage(bitmap))
                             {
@@ -240,6 +244,18 @@ namespace Cenfotur.WebApi.Controllers
                                     byte[] bytes = memory.ToArray();
                                     fs.Write(bytes, 0, bytes.Length);
                                 }
+                            }
+                            Document document = new Document();
+                            using (var stream = new FileStream(rutaCompletaPdf, FileMode.Create, FileAccess.Write, FileShare.None))
+                            {
+                                PdfWriter.GetInstance(document, stream);
+                                document.Open();
+                                using (var imageStream = new FileStream(rutaCompleta, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                                {
+                                    var image =  iTextSharp.text.Image.GetInstance(imageStream);
+                                    document.Add(image);
+                                }
+                                document.Close();
                             }
                             
                             listaCertificados.Add(nuevoCert);
