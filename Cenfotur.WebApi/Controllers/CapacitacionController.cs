@@ -373,5 +373,101 @@ namespace Cenfotur.WebApi.Controllers
             DateTimeFormatInfo dtinfo = new CultureInfo("es-ES", false).DateTimeFormat;
             return dtinfo.GetMonthName(month);
         }
+        
+        [HttpGet("listar-capacitaciones-resumen")] // api/capacitaciones
+        public async Task<IEnumerable<CapacitacionResumen_O_DTO>> GetCapacitacionesResumen([FromQuery] Capacitacion_F_DTO filtro)
+        {
+            IList<CapacitacionResumen_O_DTO> listaResult = new List<CapacitacionResumen_O_DTO>();
+            try
+            {
+                if (!filtro.Anio.HasValue)
+                    return listaResult;
+            
+                var capacitacionesDb = await _context.Capacitaciones
+                    .Include(c => c.Ubigeo.Provincia)
+                    .Include(c => c.Ubigeo.Departamento)
+                    .Include(c => c.Facilitador)
+                    .Include(c => c.Curso)
+                    .ThenInclude(cu => cu.PerfilRelacionado)
+                    .Include(c => c.TipoCapacitacion)
+                    .Include(c => c.Asistencia)
+                    .ThenInclude(a => a.Participante)
+                    .Include(c => c.Notas)
+                    .ThenInclude(n => n.Participante)
+                    .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo)) 
+                                                                          && (!filtro.TipoCapacitacionId.HasValue || (c.TipoCapacitacionId == filtro.TipoCapacitacionId)))
+                    .OrderByDescending(c => c.FechaCreacion).ToListAsync();
+
+                foreach (var capacitacionDb in capacitacionesDb)
+                {
+                    var dto = _mapper.Map<CapacitacionResumen_O_DTO>(capacitacionDb);
+                    var asistenciaDb = capacitacionDb.Asistencia.OrderBy(x => x.ParticipanteId);
+                    //asistencia
+                    dto.Asistencias = new List<Asistencia_O_DTO>();
+                    var actualParticipanteId = 0;
+                    var asistenciaDto = new Asistencia_O_DTO();
+                    asistenciaDto.Fechas = new List<FechaAsistencia_O_DTO>();
+
+                    foreach (var asistencia in asistenciaDb)
+                    {
+                        if (asistencia.ParticipanteId != actualParticipanteId)
+                        {
+                            if (actualParticipanteId != 0)
+                            {
+                                asistenciaDto = new Asistencia_O_DTO();
+                                asistenciaDto.Fechas = new List<FechaAsistencia_O_DTO>();
+                            }
+                            
+                            asistenciaDto.ParticipanteId = asistencia.ParticipanteId;
+                            asistenciaDto.CapacitacionId = asistencia.CapacitacionId;
+                            asistenciaDto.NumeroDocumento = asistencia.Participante.NumeroDocumento;
+                            asistenciaDto.Participante = string.Concat(asistencia.Participante.ApellidoPaterno, " ",
+                                asistencia.Participante.ApellidoMaterno, ", ", asistencia.Participante.Nombres).ToUpper();
+                            actualParticipanteId = asistencia.ParticipanteId;
+                            dto.Asistencias.Add(asistenciaDto);
+                        }
+                        
+                        var fechaDto = new FechaAsistencia_O_DTO();
+                        fechaDto.Fecha = asistencia.FechaAsistencia;
+                        fechaDto.Asistio = asistencia.Asistio;
+                        asistenciaDto.Fechas.Add(fechaDto);
+                    }
+                    dto.Asistencias = dto.Asistencias.OrderBy(x => x.Participante).ToList();
+                    
+                    //notas
+                    dto.Notas = capacitacionDb.Notas.Select(x => _mapper.Map<Nota_O_DTO>(x)).OrderBy(x => x.Participante).ToList();
+                    
+                    //Consolidado
+                    dto.Consolidado = new List<CapacitacionConsolidado_O_DTO>();
+                    var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoAprobadosDto.Nombre = "Aprobadods";
+                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) >= 11);
+                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoAprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoAprobadosDto);
+                    
+                    var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
+                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) < 11);
+                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoDesaprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoDesaprobadosDto);
+                    
+                    var consolidadoIPIDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoIPIDto.Nombre = "IPI";
+                    consolidadoIPIDto.Total = capacitacionDb.Notas.Count(x => x.Nf == "IPI");
+                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoIPIDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoIPIDto);
+                    
+                    listaResult.Add(dto);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _logger.LogError(e.ToString());
+            }
+
+            return listaResult;
+        }
     }
 }

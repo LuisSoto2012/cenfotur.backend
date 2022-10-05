@@ -103,6 +103,23 @@ namespace Cenfotur.Entidad.AutoMapper
             //Capacitaciones
             CreateMap<Capacitacion_I_DTO, Capacitacion>()
                 .ForMember(r => r.UbigueoId, x => x.MapFrom(c => c.DistritoId)); // Inserta
+            CreateMap<Capacitacion, CapacitacionResumen_O_DTO>()
+                .ForMember(r => r.DistritoId, x => x.MapFrom(c => c.UbigueoId))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Ubigeo.Nombre))
+                .ForMember(r => r.ProvinciaId, x => x.MapFrom(c => c.Ubigeo.Provincia.ProvinciaId))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Ubigeo.Provincia.Nombre))
+                .ForMember(r => r.DepartamentoId, x => x.MapFrom(c => c.Ubigeo.Departamento.DepartamentoId))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Ubigeo.Departamento.Nombre))
+                .ForMember(r => r.TipoCapacitacionId, x => x.MapFrom(c => c.TipoCapacitacionId))
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion.Nombre))
+                .ForMember(r => r.FacilitadorId, x => x.MapFrom(c => c.FacilitadorId))
+                .ForMember(r => r.Facilitador,
+                    x => x.MapFrom(c =>
+                        c.Facilitador == null
+                            ? ""
+                            : string.Concat(c.Facilitador.Nombres, " ", c.Facilitador.ApellidoPaterno, " ",
+                                c.Facilitador.ApellidoMaterno)))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre));
             CreateMap<Capacitacion, Capacitacion_O_DTO>()
                 .ForMember(r => r.DistritoId, x => x.MapFrom(c => c.UbigueoId))
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Ubigeo.Nombre))
