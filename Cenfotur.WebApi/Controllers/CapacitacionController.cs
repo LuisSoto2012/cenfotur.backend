@@ -443,19 +443,19 @@ namespace Cenfotur.WebApi.Controllers
                     var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoAprobadosDto.Nombre = "Aprobadods";
                     consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) >= 11);
-                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoAprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoAprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoAprobadosDto);
                     
                     var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
                     consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) < 11);
-                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoDesaprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoDesaprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoDesaprobadosDto);
                     
                     var consolidadoIPIDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoIPIDto.Nombre = "IPI";
                     consolidadoIPIDto.Total = capacitacionDb.Notas.Count(x => x.Nf == "IPI");
-                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoIPIDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoIPIDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoIPIDto);
                     
                     listaResult.Add(dto);
@@ -533,20 +533,20 @@ namespace Cenfotur.WebApi.Controllers
                     dto.Consolidado = new List<CapacitacionConsolidado_O_DTO>();
                     var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoAprobadosDto.Nombre = "Aprobadods";
-                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) >= 11);
-                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoAprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) >= 11);
+                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoAprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoAprobadosDto);
                     
                     var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
-                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) < 11);
-                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoDesaprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) < 11);
+                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoDesaprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoDesaprobadosDto);
                     
                     var consolidadoIPIDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoIPIDto.Nombre = "IPI";
                     consolidadoIPIDto.Total = capacitacionDb.Notas.Count(x => x.Nf == "IPI");
-                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoIPIDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoIPIDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoIPIDto);
                 
                 //Excel
