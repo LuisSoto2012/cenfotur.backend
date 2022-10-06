@@ -10,5 +10,6 @@ namespace Cenfotur.Entidad.ViewModels
         public string RegistroEmpresa { get; set; }
         public string RutaCertificados { get; set; }
         public string CertificadoPlantilla { get; set; }
+        public string ExcelPlantilla { get; set; }
     }
 }

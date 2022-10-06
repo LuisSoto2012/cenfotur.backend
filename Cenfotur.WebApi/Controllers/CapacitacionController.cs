@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Drawing;
 using System.Globalization;
+using ClosedXML.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Barcode = NetBarcode.Barcode;
@@ -441,13 +442,13 @@ namespace Cenfotur.WebApi.Controllers
                     dto.Consolidado = new List<CapacitacionConsolidado_O_DTO>();
                     var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoAprobadosDto.Nombre = "Aprobadods";
-                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) >= 11);
+                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) >= 11);
                     consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoAprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoAprobadosDto);
                     
                     var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
                     consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
-                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) < 11);
+                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) < 11);
                     consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoDesaprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoDesaprobadosDto);
                     
@@ -468,6 +469,235 @@ namespace Cenfotur.WebApi.Controllers
             }
 
             return listaResult;
+        }
+
+        [HttpGet("exportar-resumen-excel/{capacitacionId:int}")]
+        public async Task<ActionResult> ExportarResumenExcel([FromRoute] int capacitacionId)
+        {
+            try
+            {
+                //Capacitacion
+                var capacitacionDb = await _context.Capacitaciones
+                    .Include(c => c.Ubigeo.Provincia)
+                    .Include(c => c.Ubigeo.Departamento)
+                    .Include(c => c.Facilitador)
+                    .Include(c => c.Curso)
+                    .ThenInclude(cu => cu.PerfilRelacionado)
+                    .Include(c => c.TipoCapacitacion)
+                    .Include(c => c.Asistencia)
+                    .ThenInclude(a => a.Participante)
+                    .Include(c => c.Notas)
+                    .ThenInclude(n => n.Participante)
+                    .FirstOrDefaultAsync(x => x.CapacitacionId == capacitacionId);
+
+                if (capacitacionDb == null) return NoContent();
+                
+                var dto = _mapper.Map<CapacitacionResumen_O_DTO>(capacitacionDb);
+                    var asistenciaDb = capacitacionDb.Asistencia.OrderBy(x => x.ParticipanteId);
+                    //asistencia
+                    dto.Asistencias = new List<Asistencia_O_DTO>();
+                    var actualParticipanteId = 0;
+                    var asistenciaDto = new Asistencia_O_DTO();
+                    asistenciaDto.Fechas = new List<FechaAsistencia_O_DTO>();
+
+                    foreach (var asistencia in asistenciaDb)
+                    {
+                        if (asistencia.ParticipanteId != actualParticipanteId)
+                        {
+                            if (actualParticipanteId != 0)
+                            {
+                                asistenciaDto = new Asistencia_O_DTO();
+                                asistenciaDto.Fechas = new List<FechaAsistencia_O_DTO>();
+                            }
+                            
+                            asistenciaDto.ParticipanteId = asistencia.ParticipanteId;
+                            asistenciaDto.CapacitacionId = asistencia.CapacitacionId;
+                            asistenciaDto.NumeroDocumento = asistencia.Participante.NumeroDocumento;
+                            asistenciaDto.Participante = string.Concat(asistencia.Participante.ApellidoPaterno, " ",
+                                asistencia.Participante.ApellidoMaterno, ", ", asistencia.Participante.Nombres).ToUpper();
+                            actualParticipanteId = asistencia.ParticipanteId;
+                            dto.Asistencias.Add(asistenciaDto);
+                        }
+                        
+                        var fechaDto = new FechaAsistencia_O_DTO();
+                        fechaDto.Fecha = asistencia.FechaAsistencia;
+                        fechaDto.Asistio = asistencia.Asistio;
+                        asistenciaDto.Fechas.Add(fechaDto);
+                    }
+                    dto.Asistencias = dto.Asistencias.OrderBy(x => x.Participante).ToList();
+                    
+                    //notas
+                    dto.Notas = capacitacionDb.Notas.Select(x => _mapper.Map<Nota_O_DTO>(x)).OrderBy(x => x.Participante).ToList();
+                    
+                    //Consolidado
+                    dto.Consolidado = new List<CapacitacionConsolidado_O_DTO>();
+                    var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoAprobadosDto.Nombre = "Aprobadods";
+                    consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) >= 11);
+                    consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoAprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoAprobadosDto);
+                    
+                    var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
+                    consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => int.Parse(x.Nf) < 11);
+                    consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoDesaprobadosDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoDesaprobadosDto);
+                    
+                    var consolidadoIPIDto = new CapacitacionConsolidado_O_DTO();
+                    consolidadoIPIDto.Nombre = "IPI";
+                    consolidadoIPIDto.Total = capacitacionDb.Notas.Count(x => x.Nf == "IPI");
+                    consolidadoIPIDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)(consolidadoIPIDto.Total / capacitacionDb.Notas.Count)) : "0.00%";
+                    dto.Consolidado.Add(consolidadoIPIDto);
+                
+                //Excel
+                var plantilla = _archivoSettings.ExcelPlantilla;
+
+                using (var wb = new XLWorkbook())
+                {
+                    //Primera worksheet
+                    //var ws = wb.Worksheets.ElementAt(0);
+                    var ws = wb.Worksheets.Add("Resumen");
+
+                    ws.ShowGridLines = false;
+                
+                    //Cabecera
+                    var curso = dto.Curso;
+                    var facilitador = dto.Facilitador;
+                    var fechaInicio = dto.FechaInicio.ToString("yyyy-MM-dd");
+                    var fechaFin = dto.FechaFin.ToString("yyyy-MM-dd");
+                    var region = $"{dto.Departamento} - {dto.Provincia} - {dto.Distrito}";
+
+                    var titleCursoStyle = wb.Style;
+                    titleCursoStyle.Font.Bold = true;
+                    titleCursoStyle.Font.FontSize = 36;
+                    
+                    ws.Cell(5, 2).Value = "Facilitador:";
+                    ws.Cell(5, 3).Value = facilitador;
+                    ws.Cell(6, 2).Value = "Fecha Inicio:";
+                    ws.Cell(6, 3).Value = fechaInicio;
+                    ws.Cell(5, 8).Value = "Fecha Fin:";
+                    ws.Cell(5, 9).Value = fechaFin;
+                    ws.Cell(6, 8).Value = "Región:";
+                    ws.Cell(6, 9).Value = region;
+                    
+                    //Estructura
+                    var titlesStyle = wb.Style;
+                    titlesStyle.Font.Bold = true;
+                    titlesStyle.Font.FontSize = 18;
+                    
+                    //Asistencias
+                    var listOfArrAsist = new List<List<string>>();
+                    var headerFechas = new List<string>();
+                    
+                    ws.Cell(9, 2).Value = "Asistencia";
+                    ws.Cell(9, 2).Style = titlesStyle;
+                        
+                    foreach (var asistencia in dto.Asistencias)
+                    {
+                        var arrAsist = new List<string>();
+                        arrAsist.Add(asistencia.NumeroDocumento);
+                        arrAsist.Add(asistencia.Participante);
+                        foreach (var fecha in asistencia.Fechas)
+                        {
+                            arrAsist.Add(fecha.Asistio ? "X" : "");
+                        }
+                        listOfArrAsist.Add(arrAsist);
+                    }
+
+                    foreach (var fecha in dto.Asistencias.ElementAt(0).Fechas)
+                    {
+                        headerFechas.Add(fecha.Fecha.ToString("yyyy-MM-dd"));
+                    }
+                    
+                    var tableAsistencia = ws.Cell(11, 2).InsertTable(listOfArrAsist);
+                    //Headers
+                    ws.Cell(11, 2).Value = "Número Documento";
+                    ws.Cell(11, 3).Value = "Participante";
+                    for (int i = 0; i < headerFechas.Count - 1; ++i)
+                    {
+                        ws.Cell(11, 4 + i).Value = headerFechas.ElementAt(i);
+                    }
+                    
+                    //Notas
+                    var indexNotas = 11 + (listOfArrAsist.Count + 2);
+                    ws.Cell(indexNotas, 2).Value = "Notas";
+                    ws.Cell(indexNotas, 2).Style = titlesStyle;
+                    
+                    var listOfArrNotas = new List<List<string>>();
+
+                    foreach (var nota in dto.Notas)
+                    {
+                        var arrNotas = new List<string>();
+                        arrNotas.Add(nota.NumeroDocumento);
+                        arrNotas.Add(nota.Participante);
+                        arrNotas.Add(nota.Ee);
+                        arrNotas.Add(nota.Ep);
+                        arrNotas.Add(nota.Ed);
+                        arrNotas.Add(nota.Ef);
+                        arrNotas.Add(nota.Nf);
+                        arrNotas.Add(nota.Letras);
+                        listOfArrNotas.Add(arrNotas);
+                    }
+
+                    var tableNotas = ws.Cell(indexNotas + 2, 2).InsertTable(listOfArrNotas);
+                    //Headers
+                    ws.Cell(indexNotas + 2, 2).Value = "Número Documento";
+                    ws.Cell(indexNotas + 2, 3).Value = "Participante";
+                    ws.Cell(indexNotas + 2, 4).Value = "EE";
+                    ws.Cell(indexNotas + 2, 5).Value = "EP";
+                    ws.Cell(indexNotas + 2, 6).Value = "ED";
+                    ws.Cell(indexNotas + 2, 7).Value = "EF";
+                    ws.Cell(indexNotas + 2, 8).Value = "NF";
+                    ws.Cell(indexNotas + 2, 9).Value = "Letras";
+                    
+                    //Resumen
+                    var indexResumen = indexNotas + 2 + (listOfArrNotas.Count + 2);
+                    ws.Cell(indexResumen, 2).Value = "Resumen";
+                    ws.Cell(indexResumen, 2).Style = titlesStyle;
+                    
+                    var listOfArrRes = new List<List<string>>();
+
+                    foreach (var res in dto.Consolidado)
+                    {
+                        var arrRes = new List<string>();
+                        arrRes.Add(res.Nombre);
+                        arrRes.Add(res.Total.ToString());
+                        arrRes.Add(res.Porcentaje);
+                        listOfArrRes.Add(arrRes);
+                    }
+                    
+                    var tableREs = ws.Cell(indexResumen + 2, 2).InsertTable(listOfArrRes);
+                    //Headers
+                    ws.Cell(indexResumen + 2, 2).Value = "Resumen General";
+                    ws.Cell(indexResumen + 2, 3).Value = "Cantidad";
+                    ws.Cell(indexResumen + 2, 4).Value = "Porcentaje";
+
+                    ws.Columns().AdjustToContents();
+                    
+                    ws.Cell(3, 5).Value = curso;
+                    ws.Cell(3, 5).Style = titleCursoStyle;
+                    
+                    using (var stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+                        var content = stream.ToArray();
+                        var file = new ExcelFile()
+                        {
+                            Content = content,
+                            ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            FileName = $"ReporteAcademico_{DateTime.Now:ddMMyyyyHHmmss}.xlsx"
+                        };
+
+                        return File(file.Content, file.ContentType, file.FileName);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return NoContent();
+            }
         }
     }
 }
