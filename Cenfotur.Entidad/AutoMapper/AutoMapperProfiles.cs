@@ -306,6 +306,56 @@ namespace Cenfotur.Entidad.AutoMapper
                                 c.Facilitador.ApellidoMaterno)))
                 .ForMember(r => r.TipoSupervision,
                     x => x.MapFrom(c => c.TipoSupervision != null ? c.TipoSupervision.Nombre : ""));
+            
+            //Directorio Encuesta
+            CreateMap<DirectorioEncuesta, DirectorioEncuesta_O_DTO>()
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito.Nombre));
+            CreateMap<DirectorioEncuesta_I_DTO, DirectorioEncuesta>();
+
+            CreateMap<Capacitacion, CapacitacionPFC_O_DTO>()
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion.Nombre))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Ubigeo.Departamento.Nombre))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Ubigeo.Provincia.Nombre))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Ubigeo.Nombre))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre))
+                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Curso.Horas))
+                .ForMember(r => r.Sesiones,
+                    x => x.MapFrom(c => (c.FechaFin - c.FechaInicio).TotalDays))
+                .ForMember(r => r.FechaInicio, x => x.MapFrom(c => c.FechaInicio))
+                .ForMember(r => r.FechaFin, x => x.MapFrom(c => c.FechaFin))
+                .ForMember(r => r.Gestor, x => x.MapFrom(c => c.GestorId.HasValue
+                    ? string.Concat(c.Gestor.ApellidoPaterno, " ", c.Gestor.ApellidoMaterno,
+                        ", ", c.Gestor.Nombres)
+                    : ""))
+                .ForMember(r => r.Facilitador, x => x.MapFrom(c => c.FacilitadorId.HasValue
+                    ? string.Concat(c.Facilitador.ApellidoPaterno, " ",
+                        c.Facilitador.ApellidoMaterno,
+                        ", ", c.Facilitador.Nombres)
+                    : ""));
+            
+            CreateMap<ProgramacionInfoPFC_I_DTO, ProgramacionInfoPFC>()
+                .ForMember(r => r.TotalCostoFacilitador, x => x.MapFrom(c => c.Honorarios ?? 0 + c.Viaticos ?? 0 + c.Pasajes ?? 0));
+            
+            CreateMap<ProgramacionInfoPFC, ProgramacionInfoPFC_O_DTO>()
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.Capacitacion.TipoCapacitacion.Nombre))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Departamento.Nombre))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Provincia.Nombre))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Nombre))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Capacitacion.Curso.Nombre))
+                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Capacitacion.Curso.Horas))
+                .ForMember(r => r.Sesiones,
+                    x => x.MapFrom(c => (c.Capacitacion.FechaFin - c.Capacitacion.FechaInicio).TotalDays))
+                .ForMember(r => r.FechaInicio, x => x.MapFrom(c => c.Capacitacion.FechaInicio))
+                .ForMember(r => r.FechaFin, x => x.MapFrom(c => c.Capacitacion.FechaFin))
+                .ForMember(r => r.Gestor, x => x.MapFrom(c => c.Capacitacion.GestorId.HasValue
+                    ? string.Concat(c.Capacitacion.Gestor.ApellidoPaterno, " ", c.Capacitacion.Gestor.ApellidoMaterno,
+                        ", ", c.Capacitacion.Gestor.Nombres)
+                    : ""))
+                .ForMember(r => r.Facilitador, x => x.MapFrom(c => c.Capacitacion.FacilitadorId.HasValue
+                    ? string.Concat(c.Capacitacion.Facilitador.ApellidoPaterno, " ",
+                        c.Capacitacion.Facilitador.ApellidoMaterno,
+                        ", ", c.Capacitacion.Facilitador.Nombres)
+                    : ""));
         }
 
 
