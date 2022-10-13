@@ -12,6 +12,10 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string Direccion { get; set; }
         public string Correo { get; set; }
         public string ActorLocal { get; set; }
+        public string Departamento { get; set; }
+        public string DepartamentoId { get; set; }
+        public string ProvinciaId { get; set; }
+        public string Provincia { get; set; }
         public string DistritoId { get; set; }
         public string Distrito { get; set; }
         public DateTime? Fecha { get; set; }

@@ -28,7 +28,9 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet("listar-directorio-encuesta")]
         public async Task<IEnumerable<DirectorioEncuesta_O_DTO>> GetDirectorioEncuesta()
         {
-            var listarDB = await _context.DirectoriosEncuestas.Include(x => x.Distrito).ToListAsync();
+            var listarDB = await _context.DirectoriosEncuestas
+                .Include(x => x.Distrito.Departamento)
+                .Include(x => x.Distrito.Provincia).ToListAsync();
 
             return listarDB.Select(x => _mapper.Map<DirectorioEncuesta_O_DTO>(x));
         }
@@ -140,7 +142,7 @@ namespace Cenfotur.WebApi.Controllers
         }
         
         [HttpGet("listar-capacitaciones")]
-        public async Task<IEnumerable<ProgramacionInfoPFC_O_DTO>> GetCapacitaciones(int anio)
+        public async Task<IEnumerable<CapacitacionPFC_O_DTO>> GetCapacitaciones(int anio)
         {
             var listarDB = await _context.Capacitaciones
                 .Include(x => x.TipoCapacitacion)
@@ -151,7 +153,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.Facilitador)
                 .Where(x => x.FechaCreacion.Value.Year == anio).ToListAsync();
 
-            return listarDB.Select(x => _mapper.Map<ProgramacionInfoPFC_O_DTO>(x));
+            return listarDB.Select(x => _mapper.Map<CapacitacionPFC_O_DTO>(x));
         }
         
         [HttpPost("registrar-programaciones-info-pfc")]

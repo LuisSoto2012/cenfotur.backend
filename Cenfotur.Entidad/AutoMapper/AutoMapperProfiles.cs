@@ -309,16 +309,20 @@ namespace Cenfotur.Entidad.AutoMapper
             
             //Directorio Encuesta
             CreateMap<DirectorioEncuesta, DirectorioEncuesta_O_DTO>()
-                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito.Nombre));
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito.Nombre))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Distrito.Departamento.Nombre))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Distrito.Provincia.Nombre))
+                .ForMember(r => r.DepartamentoId, x => x.MapFrom(c => c.Distrito.Departamento.DepartamentoId))
+                .ForMember(r => r.ProvinciaId, x => x.MapFrom(c => c.Distrito.Provincia.ProvinciaId));
             CreateMap<DirectorioEncuesta_I_DTO, DirectorioEncuesta>();
 
             CreateMap<Capacitacion, CapacitacionPFC_O_DTO>()
-                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion.Nombre))
-                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Ubigeo.Departamento.Nombre))
-                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Ubigeo.Provincia.Nombre))
-                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Ubigeo.Nombre))
-                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso.Nombre))
-                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Curso.Horas))
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion == null ? "" : c.TipoCapacitacion.Nombre))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Ubigeo == null ? "" : c.Ubigeo.Departamento.Nombre))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Ubigeo == null ? "" : c.Ubigeo.Provincia.Nombre))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Ubigeo == null ? "" : c.Ubigeo.Nombre))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Curso == null ? "" :  c.Curso.Nombre))
+                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Curso == null ? 0 : c.Curso.Horas))
                 .ForMember(r => r.Sesiones,
                     x => x.MapFrom(c => (c.FechaFin - c.FechaInicio).TotalDays))
                 .ForMember(r => r.FechaInicio, x => x.MapFrom(c => c.FechaInicio))
@@ -337,12 +341,12 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.TotalCostoFacilitador, x => x.MapFrom(c => c.Honorarios ?? 0 + c.Viaticos ?? 0 + c.Pasajes ?? 0));
             
             CreateMap<ProgramacionInfoPFC, ProgramacionInfoPFC_O_DTO>()
-                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.Capacitacion.TipoCapacitacion.Nombre))
-                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Departamento.Nombre))
-                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Provincia.Nombre))
-                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Capacitacion.Ubigeo.Nombre))
-                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Capacitacion.Curso.Nombre))
-                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Capacitacion.Curso.Horas))
+                .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.Capacitacion.TipoCapacitacion == null ? "" : c.Capacitacion.TipoCapacitacion.Nombre))
+                .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Capacitacion.Ubigeo == null ? "" : c.Capacitacion.Ubigeo.Departamento.Nombre))
+                .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Capacitacion.Ubigeo == null ? "" : c.Capacitacion.Ubigeo.Provincia.Nombre))
+                .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Capacitacion.Ubigeo == null ? "" : c.Capacitacion.Ubigeo.Nombre))
+                .ForMember(r => r.Curso, x => x.MapFrom(c => c.Capacitacion.Curso == null ? "" :  c.Capacitacion.Curso.Nombre))
+                .ForMember(r => r.Horas, x => x.MapFrom(c => c.Capacitacion.Curso == null ? 0 : c.Capacitacion.Curso.Horas))
                 .ForMember(r => r.Sesiones,
                     x => x.MapFrom(c => (c.Capacitacion.FechaFin - c.Capacitacion.FechaInicio).TotalDays))
                 .ForMember(r => r.FechaInicio, x => x.MapFrom(c => c.Capacitacion.FechaInicio))
