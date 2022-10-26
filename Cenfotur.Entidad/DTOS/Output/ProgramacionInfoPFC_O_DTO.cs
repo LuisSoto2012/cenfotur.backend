@@ -21,6 +21,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string Facilitador { get; set; }
         public string OsFacilitador { get; set; }
         public int? DiasViatico { get; set; }
+        public decimal? Honorarios { get; set; }
         public decimal? Viaticos { get; set; }
         public decimal? Pasajes { get; set; }
         public decimal? TotalCostoFacilitador { get; set; }
@@ -46,5 +47,10 @@ namespace Cenfotur.Entidad.DTOS.Output
         public int? NroInscritos { get; set; }
         public string Observaciones { get; set; }
         public string DireccionPrincipal { get; set; }
+        public bool Activo { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public int UsuarioCreacionId { get; set; }
+        public int? UsuarioModificacionId { get; set; }
     }
 }

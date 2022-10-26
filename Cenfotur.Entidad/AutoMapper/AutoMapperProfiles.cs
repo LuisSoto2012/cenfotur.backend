@@ -317,6 +317,7 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<DirectorioEncuesta_I_DTO, DirectorioEncuesta>();
 
             CreateMap<Capacitacion, CapacitacionPFC_O_DTO>()
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.Curso.PerfilRelacionado == null ? "" : c.Curso.PerfilRelacionado.Nombre))
                 .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.TipoCapacitacion == null ? "" : c.TipoCapacitacion.Nombre))
                 .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Ubigeo == null ? "" : c.Ubigeo.Departamento.Nombre))
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Ubigeo == null ? "" : c.Ubigeo.Provincia.Nombre))
@@ -341,6 +342,7 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.TotalCostoFacilitador, x => x.MapFrom(c => c.Honorarios ?? 0 + c.Viaticos ?? 0 + c.Pasajes ?? 0));
             
             CreateMap<ProgramacionInfoPFC, ProgramacionInfoPFC_O_DTO>()
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.Capacitacion.Curso.PerfilRelacionado == null ? "" : c.Capacitacion.Curso.PerfilRelacionado.Nombre))
                 .ForMember(r => r.TipoCapacitacion, x => x.MapFrom(c => c.Capacitacion.TipoCapacitacion == null ? "" : c.Capacitacion.TipoCapacitacion.Nombre))
                 .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Capacitacion.Ubigeo == null ? "" : c.Capacitacion.Ubigeo.Departamento.Nombre))
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Capacitacion.Ubigeo == null ? "" : c.Capacitacion.Ubigeo.Provincia.Nombre))

@@ -31,5 +31,9 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string P10 { get; set; }
         public string Recomendaciones { get; set; }
         public bool Activo { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public int UsuarioCreacionId { get; set; }
+        public int? UsuarioModificacionId { get; set; }
     }
 }

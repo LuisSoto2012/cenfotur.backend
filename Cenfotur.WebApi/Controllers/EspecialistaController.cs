@@ -133,7 +133,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.Capacitacion.TipoCapacitacion)
                 .Include(x => x.Capacitacion.Ubigeo.Departamento)
                 .Include(x => x.Capacitacion.Ubigeo.Provincia)
-                .Include(x => x.Capacitacion.Curso)
+                .Include(x => x.Capacitacion.Curso.PerfilRelacionado)
                 .Include(x => x.Capacitacion.Gestor)
                 .Include(x => x.Capacitacion.Facilitador)
                 .Where(x => x.FechaCreacion.Value.Year == anio).ToListAsync();
@@ -148,7 +148,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.TipoCapacitacion)
                 .Include(x => x.Ubigeo.Departamento)
                 .Include(x => x.Ubigeo.Provincia)
-                .Include(x => x.Curso)
+                .Include(x => x.Curso.PerfilRelacionado)
                 .Include(x => x.Gestor)
                 .Include(x => x.Facilitador)
                 .Where(x => x.FechaCreacion.Value.Year == anio).ToListAsync();

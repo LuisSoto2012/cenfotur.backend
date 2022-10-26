@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cenfotur.Entidad.DTOS.Output;
 
 namespace Cenfotur.Data
 {
@@ -66,10 +67,16 @@ namespace Cenfotur.Data
         public DbSet<Certificado> Certificados { get; set; }
         public DbSet<DirectorioEncuesta> DirectoriosEncuestas { get; set; }
         public DbSet<ProgramacionInfoPFC> ProgramacionesInfoPFC { get; set; }
+        
+        public DbSet<DataSP_O_DTO> DataSpODtos { get; set; }
+        public DbSet<DataSP2_O_DTO> DataSp2ODtos { get; set; }
 
         // Esto se crea para poder agregar 2 key a una tabla es la unica manera 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DataSP_O_DTO>().HasNoKey();
+            modelBuilder.Entity<DataSP2_O_DTO>().HasNoKey();
+            
             modelBuilder.Entity<EmpleadoRol>().HasKey(er => new { er.EmpleadoId, er.RolId });
             //modelbuilder.Entity<RolSubModulo>().HasKey(rs => new { rs.RolId, rs.SubModuloId }); //No se puede colocar id a una tabla muchos a muchos
 

@@ -11,6 +11,7 @@ namespace Cenfotur.Entidad.Models
         public Capacitacion Capacitacion { get; set; }
         public string OsFacilitador { get; set; }
         public int? DiasViatico { get; set; }
+        public decimal? Honorarios { get; set; }
         public decimal? Viaticos { get; set; }
         public decimal? Pasajes { get; set; }
         public decimal? TotalCostoFacilitador { get; set; }

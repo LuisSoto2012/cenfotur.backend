@@ -207,5 +207,25 @@ namespace Cenfotur.WebApi.Controllers
 
             return tipoSupervisionDb.Select(x => _mapper.Map<TipoSupervision_C_DTO>(x));
         }
+
+        [HttpGet("ObtenerDataSP1")]
+        public async Task<IEnumerable<DataSP_O_DTO>> ObtenerDataSP1([FromQuery]string spNombre, [FromQuery]string param)
+        {
+            var result = await _context
+                .Set<DataSP_O_DTO>()
+                .FromSqlRaw($"exec [dbo].[{spNombre}] {param}").ToListAsync();
+
+            return result;
+        }
+        
+        [HttpGet("ObtenerDataSP2")]
+        public async Task<IEnumerable<DataSP2_O_DTO>> ObtenerDataSP2([FromQuery]string spNombre, [FromQuery]string param)
+        {
+            var result = await _context
+                .Set<DataSP2_O_DTO>()
+                .FromSqlRaw($"exec [dbo].[{spNombre}] {param}").ToListAsync();
+
+            return result;
+        }
     }
 }
