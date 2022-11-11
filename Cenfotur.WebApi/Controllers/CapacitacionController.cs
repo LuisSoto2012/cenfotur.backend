@@ -395,13 +395,16 @@ namespace Cenfotur.WebApi.Controllers
                     .ThenInclude(a => a.Participante)
                     .Include(c => c.Notas)
                     .ThenInclude(n => n.Participante)
+                    .Include(c => c.EncuestaSatisfaccion)
                     .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo)) 
                                                                           && (!filtro.TipoCapacitacionId.HasValue || (c.TipoCapacitacionId == filtro.TipoCapacitacionId)))
+                    .Where(c => c.EncuestaSatisfaccion.Any())
                     .OrderByDescending(c => c.FechaCreacion).ToListAsync();
 
                 foreach (var capacitacionDb in capacitacionesDb)
                 {
                     var dto = _mapper.Map<CapacitacionResumen_O_DTO>(capacitacionDb);
+                    dto.Curso = $"{dto.Curso} - {dto.FechaInicio:dd/MM/yyyy} - {dto.FechaFin:dd/MM/yyyy}";
                     var asistenciaDb = capacitacionDb.Asistencia.OrderBy(x => x.ParticipanteId);
                     //asistencia
                     dto.Asistencias = new List<Asistencia_O_DTO>();
@@ -613,7 +616,7 @@ namespace Cenfotur.WebApi.Controllers
                     //Headers
                     ws.Cell(11, 2).Value = "Número Documento";
                     ws.Cell(11, 3).Value = "Participante";
-                    for (int i = 0; i < headerFechas.Count - 1; ++i)
+                    for (int i = 0; i < headerFechas.Count; ++i)
                     {
                         ws.Cell(11, 4 + i).Value = headerFechas.ElementAt(i);
                     }

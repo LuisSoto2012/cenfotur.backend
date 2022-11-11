@@ -61,7 +61,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet("Facilitadores")]
         public async Task<IEnumerable<Facilitador_O_DTO>> GetFacilitadores()
         {
-            var facilitadoresDb = await _context.Empleados.Where(x => x.Activo && x.PuestoLaboralId == 3).OrderBy(x => x.Nombres).ToListAsync();
+            var facilitadoresDb = await _context.Empleados.Include(x => x.EmpleadoRol).Where(x => x.Activo && x.EmpleadoRol.Select(er => er.RolId).Contains(7)).OrderBy(x => x.Nombres).ToListAsync();
 
             return facilitadoresDb.Select(x => _mapper.Map<Facilitador_O_DTO>(x));
         }
@@ -69,7 +69,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet("Gestores")]
         public async Task<IEnumerable<Gestor_O_DTO>> GetGestores()
         {
-            var gestoresDb = await _context.Empleados.Where(x => x.Activo && x.PuestoLaboralId == 2).OrderBy(x => x.Nombres).ToListAsync();
+            var gestoresDb = await _context.Empleados.Include(x => x.EmpleadoRol).Where(x => x.Activo && x.EmpleadoRol.Select(er => er.RolId).Contains(10)).OrderBy(x => x.Nombres).ToListAsync();
 
             return gestoresDb.Select(x => _mapper.Map<Gestor_O_DTO>(x));
         }

@@ -295,7 +295,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
                 .Include(c => c.ParticipanteCapacitacion)
-                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado)
+                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && !c.EstaCerrada && c.FechaInicio.Date >= DateTime.Now.Date)
                 .ToListAsync();
 
             var listaResult = new List<RegistroPostulacion_O_DTO>();

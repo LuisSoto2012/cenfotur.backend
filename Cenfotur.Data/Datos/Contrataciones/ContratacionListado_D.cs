@@ -89,7 +89,7 @@ namespace Cenfotur.Data.Contrataciones
                                 oContratacionListado_E.Habilitacion = Reader.IsDBNull(Habilitacion) ? "" : Reader.GetString(Habilitacion);
                                 oContratacionListado_E.ArchivoOrdenServicio = Reader.IsDBNull(ArchivoOrdenServicio)
                                     ? ""
-                                    :  Convert.ToBase64String(File.ReadAllBytes(Reader.GetString(ArchivoOrdenServicio)));
+                                    :  ReadFile(Reader.GetString(ArchivoOrdenServicio));
                                 oContratacionListado_E.RutaOrdenServicio =  Reader.IsDBNull(ArchivoOrdenServicio)
                                     ? ""
                                     :  Reader.GetString(ArchivoOrdenServicio);
@@ -109,6 +109,16 @@ namespace Cenfotur.Data.Contrataciones
 
             return Lista;
 
+        }
+
+        private string ReadFile(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                return Convert.ToBase64String(File.ReadAllBytes(path));
+            }
+
+            return string.Empty;
         }
     }
 }
