@@ -59,6 +59,14 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string TipoRemuneracion { get; set; }
         public decimal? Remuneracion { get; set; }
         public bool? AceptaCorreosOtros { get; set; }
+        public string TipoContribuyente { get; set; }
+        public string Rubro { get; set; }
+        public string Dicertur { get; set; }
+        public string Clase { get; set; }
+        public string Categoria { get; set; }
+        public string TelefonoMovilEmpresa { get; set; }
+        public string CorreoElectronicoEmpresa { get; set; }
+        public string PaginaWeb { get; set; }
 
         public string EstadoCapacitacion { get; set; }   
     }

@@ -49,7 +49,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet] // api/capacitaciones
         public async Task<IEnumerable<Capacitacion_O_DTO>> Get([FromQuery] Capacitacion_F_DTO filtro)
         {
-            IEnumerable<Capacitacion_O_DTO> listaResult = new List<Capacitacion_O_DTO>();
+            IList<Capacitacion_O_DTO> listaResult = new List<Capacitacion_O_DTO>();
             try
             {
                 if (!filtro.Anio.HasValue)
@@ -65,11 +65,34 @@ namespace Cenfotur.WebApi.Controllers
                     .Include(c => c.TipoCapacitacion)
                     .Include(c => c.Documentaciones)
                     .Include(c => c.MaterialesAcademicos)
+                    .Include(c => c.ParticipanteCapacitacion)
+                    .ThenInclude(pc => pc.Participante.Certificados)
                     .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo)) 
                                                                           && (!filtro.TipoCapacitacionId.HasValue || (c.TipoCapacitacionId == filtro.TipoCapacitacionId)))
+
                     .OrderByDescending(c => c.FechaCreacion).ToListAsync();
-                
-                listaResult = capacitacionDb.Select(c => _mapper.Map<Capacitacion_O_DTO>(c));;
+
+                //listaResult = capacitacionDb.Select(c => _mapper.Map<Capacitacion_O_DTO>(c));
+
+                foreach (var capacitacion in capacitacionDb)
+                {
+                    var dto = _mapper.Map<Capacitacion_O_DTO>(capacitacion);
+                    dto.Participantes = new List<Participante_O_DTO>();
+                    var participantes = capacitacion.ParticipanteCapacitacion.Select(pc => pc.Participante);
+                    foreach (var participante in participantes)
+                    {
+                        var participanteDto = _mapper.Map<Participante_O_DTO>(participante);
+                        var certificadoCap =
+                            participante.Certificados.FirstOrDefault(c =>
+                                c.CapacitacionId == capacitacion.CapacitacionId);
+                        participanteDto.Certificado = certificadoCap == null ? "" :
+                            string.IsNullOrEmpty(certificadoCap.Ruta) || certificadoCap.Ruta == "null" ? "" :
+                            Convert.ToBase64String(System.IO.File.ReadAllBytes(certificadoCap.Ruta));
+                        dto.Participantes.Add(participanteDto);
+                    }
+
+                    listaResult.Add(dto);
+                }
             }
             catch (Exception e)
             {
@@ -132,8 +155,6 @@ namespace Cenfotur.WebApi.Controllers
                 {
                     if (capacitacionDb.EstaCerrada)
                         return BadRequest("No se puede hacer modificaciones a una capacitación cerrada.");
-                    if (!capacitacionDb.ParticipanteCapacitacion.Any())
-                        return BadRequest("No se puede cerrar una capacitación que no tiene participantes.");
                     var capacitacion = _mapper.Map<Capacitacion>(capacitacionIDto);
                     capacitacion.CapacitacionId = Id;
                     capacitacion.FechaModificacion = DateTime.Now;
@@ -142,6 +163,9 @@ namespace Cenfotur.WebApi.Controllers
                     //Cerrar capacitacion
                     if (capacitacionIDto.EstaCerrada)
                     {
+                        if (!capacitacionDb.ParticipanteCapacitacion.Any())
+                            return BadRequest("No se puede cerrar una capacitación que no tiene participantes.");
+                    
                         capacitacion.EstaCerrada = true;
                         //Obtener participantes
                         var participantesDb = capacitacionDb.ParticipanteCapacitacion.Select(pc => pc.Participante);

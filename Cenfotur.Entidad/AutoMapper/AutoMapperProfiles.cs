@@ -226,7 +226,20 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" || c.CertificadoTrabajo == "NO REGISTRA" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))
                 .ForMember(r => r.RutaCertificadoTrabajo, x => x.MapFrom(c => c.CertificadoTrabajo))
-                .ForMember(r => r.EstadoCapacitacion, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any() ? c.ParticipanteCapacitacion.First().Estado : ""));
+                .ForMember(r => r.EstadoCapacitacion, x => x.MapFrom(c => c.ParticipanteCapacitacion.Any() ? c.ParticipanteCapacitacion.First().Estado : ""))
+                .ForMember(r => r.NombreComercial, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.NombreComercial : ""))
+                .ForMember(r => r.RazonSocial, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.RazonSocial : ""))
+                .ForMember(r => r.TipoContribuyente, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.TipoContribuyente.Nombre : ""))
+                .ForMember(r => r.Rubro, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Rubro.Nombre : ""))
+                .ForMember(r => r.Dicertur, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Dicertur.Nombre : ""))
+                .ForMember(r => r.Clase, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Clase.Nombre : ""))
+                .ForMember(r => r.Categoria, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.Categoria.Nombre : ""))
+                .ForMember(r => r.TelefonoEmpresa, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.TelefonoFijo : ""))
+                .ForMember(r => r.TelefonoMovilEmpresa, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.TelefonoMovil : ""))
+                .ForMember(r => r.CorreoElectronicoEmpresa, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.CorreoElectronico : ""))
+                .ForMember(r => r.PaginaWeb, x => x.MapFrom(c => c.EmpresaId.HasValue ? c.Empresa.PaginaWeb : ""));
+
+
 
             CreateMap<Capacitacion, RegistroPostulacion_O_DTO>()
                 .ForMember(r => r.NombreCurso, x => x.MapFrom(c => c.Curso.Nombre))
