@@ -201,7 +201,7 @@ namespace Cenfotur.WebApi.Controllers
                             nuevoCert.Ruta = rutaCompleta;
                             
                             var plantilla = _archivoSettings.CertificadoPlantilla;
-                            
+
                             var barcode = new Barcode(codigo, NetBarcode.Type.Code11, false, 670, 55);
                             string barcodeImgPath = $"{ruta}{codigo}_barcode.jpg";
                             barcode.SaveImageFile(barcodeImgPath);
@@ -212,7 +212,7 @@ namespace Cenfotur.WebApi.Controllers
                             PointF fechaLocation = new PointF(922f, 1277f);
                             PointF codigoLocation = new PointF(245f, 1625f);
                             PointF barcodeLocation = new PointF(300f, 1590f);
-                            
+
                             // PointF secondLocation = participante.UserType.Contains("MEDICO") || participante.UserType.Contains("MÉDICO") ? 
                             //     new PointF(128f, 830f) : new PointF(110f, 830f) ;
                             Bitmap bitmap = (Bitmap)System.Drawing.Image.FromFile(plantilla);//load the image file
@@ -468,13 +468,13 @@ namespace Cenfotur.WebApi.Controllers
                     //Consolidado
                     dto.Consolidado = new List<CapacitacionConsolidado_O_DTO>();
                     var consolidadoAprobadosDto = new CapacitacionConsolidado_O_DTO();
-                    consolidadoAprobadosDto.Nombre = "Aprobadods";
+                    consolidadoAprobadosDto.Nombre = "Aprobados";
                     consolidadoAprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) >= 11);
                     consolidadoAprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoAprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoAprobadosDto);
                     
                     var consolidadoDesaprobadosDto = new CapacitacionConsolidado_O_DTO();
-                    consolidadoDesaprobadosDto.Nombre = "Desaprobadods";
+                    consolidadoDesaprobadosDto.Nombre = "Desaprobados";
                     consolidadoDesaprobadosDto.Total = capacitacionDb.Notas.Count(x => x.Nf != "IPI" && int.Parse(x.Nf) < 11);
                     consolidadoDesaprobadosDto.Porcentaje = capacitacionDb.Notas.Any() ? string.Format("{0:P2}", (decimal)((decimal)consolidadoDesaprobadosDto.Total / (decimal)capacitacionDb.Notas.Count)) : "0.00%";
                     dto.Consolidado.Add(consolidadoDesaprobadosDto);

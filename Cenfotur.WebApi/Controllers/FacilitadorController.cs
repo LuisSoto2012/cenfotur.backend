@@ -36,7 +36,7 @@ namespace Cenfotur.WebApi.Controllers
         {
             var capacitacionDb =
                 await _context.Capacitaciones.FirstOrDefaultAsync(x =>
-                    x.FacilitadorId == facilitadorId);
+                    x.FacilitadorId == facilitadorId && x.EstaCerrada == false);
             return capacitacionDb?.CapacitacionId ?? 0;
         }
         
