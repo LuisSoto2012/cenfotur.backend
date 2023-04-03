@@ -1,5 +1,7 @@
 // Curso_I_DTO.cs18:2818:28
 
+using System;
+
 namespace Cenfotur.Entidad.DTOS.Input
 {
     public class Curso_I_DTO
@@ -28,5 +30,6 @@ namespace Cenfotur.Entidad.DTOS.Input
         public int UsuarioCreacionId { get; set; }
         public int? UsuarioModificacionId { get; set; }
         public bool Activo { get; set; }
+        public DateTime? FechaCreacion { get; set; }
     }
 }

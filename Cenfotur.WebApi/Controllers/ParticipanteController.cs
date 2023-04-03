@@ -161,9 +161,10 @@ namespace Cenfotur.WebApi.Controllers
                 await _context.SaveChangesAsync();
                 
                 var perfiles = new List<ParticipantePerfilRelacionado>();
-                foreach (var perfilId in participanteIDto.PerfilRelacionado)
+                var arrPerfiles = participanteIDto.PerfilRelacionado.Split(",");
+                foreach (var perfilId in arrPerfiles)
                 {
-                    var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participanteNuevo.ParticipanteId, PerfilRelacionadoId = perfilId };
+                    var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participanteNuevo.ParticipanteId, PerfilRelacionadoId = int.Parse(perfilId) };
                     perfiles.Add(participantePerfilRelacionado);
                 }
 
@@ -200,8 +201,8 @@ namespace Cenfotur.WebApi.Controllers
             
             try
             {
-                var participanteDb = await _context.Participantes.Include(x => x.ParticipantePerfilRelacionado).FirstOrDefaultAsync(e => e.ParticipanteId == Id);
-                if (participanteDb != null)
+                var existe = await _context.Participantes.Include(x => x.ParticipantePerfilRelacionado).AnyAsync(e => e.ParticipanteId == Id);
+                if (existe)
                 {
                     var participante = _mapper.Map<Participante>(participanteIDto);
                     participante.ParticipanteId = Id;
@@ -248,6 +249,7 @@ namespace Cenfotur.WebApi.Controllers
                     await _context.SaveChangesAsync();
                     
                     //Eliminar antiguos registros perfiles
+                    var participanteDb = await _context.Participantes.Include(x => x.ParticipantePerfilRelacionado).FirstOrDefaultAsync(e => e.ParticipanteId == Id);
                     if (participanteDb.ParticipantePerfilRelacionado.Any())
                     {
                         _context.RemoveRange(participanteDb.ParticipantePerfilRelacionado);
@@ -255,9 +257,10 @@ namespace Cenfotur.WebApi.Controllers
                     }
 
                     var perfiles = new List<ParticipantePerfilRelacionado>();
-                    foreach (var perfilId in participanteIDto.PerfilRelacionado)
+                    var arrPerfiles = participanteIDto.PerfilRelacionado.Split(",");
+                    foreach (var perfilId in arrPerfiles)
                     {
-                        var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participante.ParticipanteId, PerfilRelacionadoId = perfilId };
+                        var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participante.ParticipanteId, PerfilRelacionadoId = int.Parse(perfilId) };
                         perfiles.Add(participantePerfilRelacionado);
                     }
 
@@ -315,8 +318,11 @@ namespace Cenfotur.WebApi.Controllers
         }
 
         [HttpGet("RegistroPostulacion")]
-        public async Task<IEnumerable<RegistroPostulacion_O_DTO>> RegistroPostulacion([FromQuery]int idPerfilRelacionado, [FromQuery]int idParticipante)
+        public async Task<IEnumerable<RegistroPostulacion_O_DTO>> RegistroPostulacion([FromQuery]string idPerfilRelacionado, [FromQuery]int idParticipante)
         {
+            int[] arrPerfiles = Array.ConvertAll(idPerfilRelacionado.Split(",").ToArray(), s => int.Parse(s));
+            Array.Sort(arrPerfiles);
+            string arrPerfilesStr = string.Join(',', arrPerfiles);
             var capacitacionesDb = await _context.Capacitaciones
                 .Include(c => c.Ubigeo.Provincia)
                 .Include(c => c.Ubigeo.Departamento)
@@ -328,7 +334,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.Documentaciones)
                 .Include(c => c.MaterialesAcademicos)
                 .Include(c => c.ParticipanteCapacitacion)
-                .Where(c => c.Activo && c.Curso.PerfilRelacionadoId == idPerfilRelacionado && !c.EstaCerrada && c.FechaInicio.Date >= DateTime.Now.Date)
+                .Where(c => c.Activo && c.Curso.CursoPerfilRelacionado.Any(cp => arrPerfiles.Contains(cp.PerfilRelacionadoId)) && !c.EstaCerrada && c.FechaInicio.Date >= DateTime.Now.Date)
                 .ToListAsync();
 
             var listaResult = new List<RegistroPostulacion_O_DTO>();
@@ -342,6 +348,17 @@ namespace Cenfotur.WebApi.Controllers
 
 
             return listaResult;
+        }
+
+        private bool IntArrContainValues(int[] arr, int[] values)
+        {
+            foreach (var val in values)
+            {
+                if (!arr.Contains(val))
+                    return false;
+            }
+
+            return true;
         }
 
         [HttpPost("RegistroCapacitacion")]

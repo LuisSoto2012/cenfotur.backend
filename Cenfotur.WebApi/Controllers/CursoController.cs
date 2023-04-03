@@ -98,8 +98,8 @@ namespace Cenfotur.WebApi.Controllers
 
             try
             {
-                var cursoDb = await _context.Cursos.Include(x => x.CursoPerfilRelacionado).FirstOrDefaultAsync(e => e.CursoId == Id);
-                if (cursoDb != null)
+                var existe = await _context.Cursos.Include(x => x.CursoPerfilRelacionado).AnyAsync(e => e.CursoId == Id);
+                if (existe)
                 {
                     var curso = _mapper.Map<Curso>(cursoIDto);
                     curso.CursoId = Id;
@@ -107,13 +107,14 @@ namespace Cenfotur.WebApi.Controllers
                     curso.UsuarioModificacionId = cursoIDto.UsuarioModificacionId;
                     _context.Update(curso);
                     await _context.SaveChangesAsync();
+                    var cursoDb = await _context.Cursos.Include(x => x.CursoPerfilRelacionado).FirstOrDefaultAsync(e => e.CursoId == Id);
                     //Eliminar antiguos registros perfiles
                     if (cursoDb.CursoPerfilRelacionado.Any())
                     {
                         _context.RemoveRange(cursoDb.CursoPerfilRelacionado);
-                        await _context.SaveChangesAsync();
                     }
-
+                    await _context.SaveChangesAsync();
+                    
                     var perfiles = new List<CursoPerfilRelacionado>();
                     foreach (var perfilId in cursoIDto.PerfilRelacionado)
                     {

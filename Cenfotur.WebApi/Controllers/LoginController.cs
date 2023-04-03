@@ -28,7 +28,7 @@ namespace Cenfotur.WebApi.Controllers
             {
                 //Validar si es participante
                 var participante =
-                    await _Context.Participantes.FirstOrDefaultAsync(p =>
+                    await _Context.Participantes.Include(x => x.ParticipantePerfilRelacionado).FirstOrDefaultAsync(p =>
                         p.Usuario == Usuario && p.Contrasena == Contrasena);
                 if (participante == null)
                 {
@@ -76,7 +76,7 @@ namespace Cenfotur.WebApi.Controllers
                     Token = "",
                     Success = true,
                     Message = "Bienvenido a CENFOTUR",
-                    PerfilRelacionadoId = participante.PerfilRelacionadoId ?? 0,
+                    PerfilRelacionadoId = string.Join(',',participante.ParticipantePerfilRelacionado.Select(x => x.PerfilRelacionadoId).ToArray()),
                     Roles,
                     Modulos
 

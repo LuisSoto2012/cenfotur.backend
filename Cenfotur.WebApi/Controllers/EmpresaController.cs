@@ -62,6 +62,27 @@ namespace Cenfotur.WebApi.Controllers
             return _mapper.Map<Empresa_O_DTO>(Empresa);
         }
         
+        [HttpGet("ruc/{ruc}")]
+        public async Task<ActionResult<Empresa_O_DTO>> Get(string ruc)
+        {
+            var Empresa = await _context.Empresas
+                .Include(x => x.Rubro)
+                .Include(x => x.Dicertur)
+                .Include(x => x.Clase)
+                .Include(x => x.Categoria)
+                .Include(x => x.Departamento)
+                .Include(x => x.Provincia)
+                .Include(x => x.Distrito)
+                .Include(x => x.TipoContribuyente)
+                .FirstOrDefaultAsync(x => x.Ruc == ruc);
+
+            if (Empresa == null)
+            {
+                return BadRequest("No existe un empleado con ese Ruc");
+            }
+            return _mapper.Map<Empresa_O_DTO>(Empresa);
+        }
+        
         [HttpPost] // Crea
         public async Task<ActionResult> Post([FromBody]Empresa_I_DTO empresaIDto)
         {

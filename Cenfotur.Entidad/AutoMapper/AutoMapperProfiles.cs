@@ -67,7 +67,8 @@ namespace Cenfotur.Entidad.AutoMapper
             CreateMap<MetaPresupuestal, MetaPresupuestal_O_DTO>(); // Lee
 
 
-            CreateMap<Curso_I_DTO, Curso>(); // Inserta
+            CreateMap<Curso_I_DTO, Curso>()
+                .ForMember(r => r.PerfilRelacionado, opt => opt.Ignore()); // Inserta
             CreateMap<Curso, Curso_O_DTO>()
                 //.ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.PerfilRelacionado != null ? e.PerfilRelacionado.Nombre : "")); // Lee
                 .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.CursoPerfilRelacionado.Any() ? e.CursoPerfilRelacionado.Select(x => x.PerfilRelacionadoId).ToArray() : new int []{})); // Lee
@@ -85,8 +86,8 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.GestorId, x => x.MapFrom(e => e.EmpleadoId))
                 .ForMember(r => r.Nombre, x => x.MapFrom(e => string.Concat(e.NumDoc, " - ", e.Nombres, " ", e.ApellidoPaterno, " ", e.ApellidoMaterno).ToUpper()));
             CreateMap<Curso, Curso_C_DTO>()
-                .ForMember(r => r.PerfilRelacionadoId, x => x.MapFrom(e => e.PerfilRelacionadoId))
-                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.PerfilRelacionado == null ? "" : e.PerfilRelacionado.Nombre));
+                //.ForMember(r => r.PerfilRelacionadoId, x => x.MapFrom(e => e.PerfilRelacionadoId))
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.CursoPerfilRelacionado.Any() ? e.CursoPerfilRelacionado.Select(x => x.PerfilRelacionadoId).ToArray() : new int []{})); // Lee
             CreateMap<EstadoCivil, EstadoCivil_C_DTO>();
             CreateMap<NivelEducativo, NivelEducativo_C_DTO>();
             CreateMap<Alcance, Alcance_C_DTO>();
@@ -189,7 +190,8 @@ namespace Cenfotur.Entidad.AutoMapper
             //Participante
             CreateMap<Participante_I_DTO, Participante>()
                 .ForMember(r => r.Usuario, x => x.MapFrom(c => c.CorreoElectronico))
-                .ForMember(r => r.Contrasena, x => x.MapFrom(c => c.NumeroDocumento));
+                .ForMember(r => r.Contrasena, x => x.MapFrom(c => c.NumeroDocumento))
+                .ForMember(r => r.PerfilRelacionado, opt => opt.Ignore());
             CreateMap<Participante, Participante_O_DTO>()
                 .ForMember(r => r.TipoDocumento, x => x.MapFrom(c => c.TipoDocumento != null ? c.TipoDocumento.Nombre : ""))
                 .ForMember(r => r.Departamento, x => x.MapFrom(c => c.Departamento != null ? c.Departamento.Nombre : ""))
