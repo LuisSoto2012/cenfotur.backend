@@ -69,7 +69,8 @@ namespace Cenfotur.Entidad.AutoMapper
 
             CreateMap<Curso_I_DTO, Curso>(); // Inserta
             CreateMap<Curso, Curso_O_DTO>()
-                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.PerfilRelacionado != null ? e.PerfilRelacionado.Nombre : "")); // Lee
+                //.ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.PerfilRelacionado != null ? e.PerfilRelacionado.Nombre : "")); // Lee
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(e => e.CursoPerfilRelacionado.Any() ? e.CursoPerfilRelacionado.Select(x => x.PerfilRelacionadoId).ToArray() : new int []{})); // Lee
             
             
             //Comunes
@@ -202,7 +203,7 @@ namespace Cenfotur.Entidad.AutoMapper
                 .ForMember(r => r.TipoRemuneracion, x => x.MapFrom(c => c.TipoRemuneracion != null ? c.TipoRemuneracion.Nombre : ""))
                 .ForMember(r => r.Provincia, x => x.MapFrom(c => c.Provincia != null ? c.Provincia.Nombre : ""))
                 .ForMember(r => r.Distrito, x => x.MapFrom(c => c.Distrito != null ? c.Distrito.Nombre : ""))
-                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.PerfilRelacionado != null ? c.PerfilRelacionado.Nombre : ""))
+                .ForMember(r => r.PerfilRelacionado, x => x.MapFrom(c => c.ParticipantePerfilRelacionado.Any() ? c.ParticipantePerfilRelacionado.Select(x => x.PerfilRelacionadoId).ToArray() : new int[]{}))
                 .ForMember(r => r.ArchivoCertificadoEstudios, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoEstudios) || c.CertificadoEstudios == "null" || c.CertificadoEstudios == "NO REGISTRA" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoEstudios))))
                 .ForMember(r => r.ArchivoCertificadoTrabajo, x => x.MapFrom(c => string.IsNullOrEmpty(c.CertificadoTrabajo) || c.CertificadoTrabajo == "null" || c.CertificadoTrabajo == "NO REGISTRA" ? null : Convert.ToBase64String(File.ReadAllBytes(c.CertificadoTrabajo))))
                 .ForMember(r => r.RutaCertificadoEstudios, x => x.MapFrom(c => c.CertificadoEstudios))

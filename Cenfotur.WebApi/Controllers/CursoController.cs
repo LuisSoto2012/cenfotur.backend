@@ -30,7 +30,7 @@ namespace Cenfotur.WebApi.Controllers
         [HttpGet] // api/cursos
         public async Task<IEnumerable<Curso_O_DTO>> Get()
         {
-            var cursosDb = await _context.Cursos.Include(c => c.PerfilRelacionado).OrderByDescending(c => c.FechaCreacion).ToListAsync();
+            var cursosDb = await _context.Cursos.Include(c => c.PerfilRelacionado).Include(x => x.CursoPerfilRelacionado).OrderByDescending(c => c.FechaCreacion).ToListAsync();
             return cursosDb.Select(c => _mapper.Map<Curso_O_DTO>(c));
         }
         
@@ -62,6 +62,18 @@ namespace Cenfotur.WebApi.Controllers
                 cursoNuevo.FechaCreacion = DateTime.Now;
                 _context.Add(cursoNuevo);
                 await _context.SaveChangesAsync();
+                var perfiles = new List<CursoPerfilRelacionado>();
+                foreach (var perfilId in cursoIDto.PerfilRelacionado)
+                {
+                    var cursoPerfilRelacionado = new CursoPerfilRelacionado { CursoId = cursoNuevo.CursoId, PerfilRelacionadoId = perfilId };
+                    perfiles.Add(cursoPerfilRelacionado);
+                }
+
+                if (perfiles.Any())
+                {
+                    _context.AddRange(perfiles);
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception e)
             {
@@ -86,16 +98,34 @@ namespace Cenfotur.WebApi.Controllers
 
             try
             {
-                var Existe = await _context.Cursos.AnyAsync(e => e.CursoId == Id);
-                if (Existe)
+                var cursoDb = await _context.Cursos.Include(x => x.CursoPerfilRelacionado).FirstOrDefaultAsync(e => e.CursoId == Id);
+                if (cursoDb != null)
                 {
                     var curso = _mapper.Map<Curso>(cursoIDto);
                     curso.CursoId = Id;
                     curso.FechaModificacion = DateTime.Now;
                     curso.UsuarioModificacionId = cursoIDto.UsuarioModificacionId;
                     _context.Update(curso);
-
                     await _context.SaveChangesAsync();
+                    //Eliminar antiguos registros perfiles
+                    if (cursoDb.CursoPerfilRelacionado.Any())
+                    {
+                        _context.RemoveRange(cursoDb.CursoPerfilRelacionado);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    var perfiles = new List<CursoPerfilRelacionado>();
+                    foreach (var perfilId in cursoIDto.PerfilRelacionado)
+                    {
+                        var cursoPerfilRelacionado = new CursoPerfilRelacionado { CursoId = curso.CursoId, PerfilRelacionadoId = perfilId };
+                        perfiles.Add(cursoPerfilRelacionado);
+                    }
+
+                    if (perfiles.Any())
+                    {
+                        _context.AddRange(perfiles);
+                        await _context.SaveChangesAsync();
+                    }
                     return NoContent();
                 }
                 return NotFound();

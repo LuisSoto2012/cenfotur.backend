@@ -47,6 +47,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.TipoDocumento)
                 .Include(c => c.Departamento)
                 .Include(c => c.PerfilRelacionado)
+                .Include(c => c.ParticipantePerfilRelacionado)
                 .OrderByDescending(c => c.FechaCreacion).ToListAsync();
             return participantesDb.Select(c => _mapper.Map<Participante_O_DTO>(c));
         }
@@ -157,8 +158,20 @@ namespace Cenfotur.WebApi.Controllers
                 }
                 
                 _context.Add(participanteNuevo);
-                
                 await _context.SaveChangesAsync();
+                
+                var perfiles = new List<ParticipantePerfilRelacionado>();
+                foreach (var perfilId in participanteIDto.PerfilRelacionado)
+                {
+                    var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participanteNuevo.ParticipanteId, PerfilRelacionadoId = perfilId };
+                    perfiles.Add(participantePerfilRelacionado);
+                }
+
+                if (perfiles.Any())
+                {
+                    _context.AddRange(perfiles);
+                    await _context.SaveChangesAsync();
+                }
 
                 await transaction.CommitAsync();
             }
@@ -187,8 +200,8 @@ namespace Cenfotur.WebApi.Controllers
             
             try
             {
-                var Existe = await _context.Participantes.AnyAsync(e => e.ParticipanteId == Id);
-                if (Existe)
+                var participanteDb = await _context.Participantes.Include(x => x.ParticipantePerfilRelacionado).FirstOrDefaultAsync(e => e.ParticipanteId == Id);
+                if (participanteDb != null)
                 {
                     var participante = _mapper.Map<Participante>(participanteIDto);
                     participante.ParticipanteId = Id;
@@ -233,6 +246,26 @@ namespace Cenfotur.WebApi.Controllers
                     _context.Update(participante);
 
                     await _context.SaveChangesAsync();
+                    
+                    //Eliminar antiguos registros perfiles
+                    if (participanteDb.ParticipantePerfilRelacionado.Any())
+                    {
+                        _context.RemoveRange(participanteDb.ParticipantePerfilRelacionado);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    var perfiles = new List<ParticipantePerfilRelacionado>();
+                    foreach (var perfilId in participanteIDto.PerfilRelacionado)
+                    {
+                        var participantePerfilRelacionado = new ParticipantePerfilRelacionado { ParticipanteId = participante.ParticipanteId, PerfilRelacionadoId = perfilId };
+                        perfiles.Add(participantePerfilRelacionado);
+                    }
+
+                    if (perfiles.Any())
+                    {
+                        _context.AddRange(perfiles);
+                        await _context.SaveChangesAsync();
+                    }
 
                     await transaction.CommitAsync();
                     

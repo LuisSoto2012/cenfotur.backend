@@ -107,5 +107,6 @@ namespace Cenfotur.Entidad.Models
         public ICollection<Nota> Notas { get; set; }
         
         public List<Certificado> Certificados { get; set; }
+        public ICollection<ParticipantePerfilRelacionado> ParticipantePerfilRelacionado { get; set; }
     }
 }

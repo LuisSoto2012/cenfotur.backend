@@ -90,6 +90,9 @@ namespace Cenfotur.Data
                 .HasOne<Distrito>(s => s.Ubigeo)
                 .WithMany(g => g.Capacitaciones)
                 .HasForeignKey(s => s.UbigueoId);
+                
+            modelBuilder.Entity<CursoPerfilRelacionado>().HasKey(er => new { er.CursoId, er.PerfilRelacionadoId });
+            modelBuilder.Entity<ParticipantePerfilRelacionado>().HasKey(er => new { er.ParticipanteId, er.PerfilRelacionadoId });
         }
     }
 }

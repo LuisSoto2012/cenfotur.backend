@@ -13,8 +13,7 @@ namespace Cenfotur.Entidad.DTOS.Output
         public int HorasAprobar { get; set; }
         public string Resolucion { get; set; }
         public decimal ExamenEntrada { get; set; }
-        public int? PerfilRelacionadoId { get; set; }
-        public string PerfilRelacionado { get; set; }
+        public int[] PerfilRelacionado { get; set; }
         public int Dias { get; set; }
         public decimal Final { get; set; }
         public decimal? Practica { get; set; }

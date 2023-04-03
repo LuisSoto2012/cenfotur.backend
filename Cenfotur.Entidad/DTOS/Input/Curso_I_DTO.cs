@@ -10,7 +10,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public int HorasAprobar { get; set; }
         public string Resolucion { get; set; }
         public decimal ExamenEntrada { get; set; }
-        public int? PerfilRelacionadoId { get; set; }
+        public int[] PerfilRelacionado { get; set; }
         public decimal? Practica { get; set; }
         public bool? PracticaNoAplica { get; set; }
         public decimal? Practica2 { get; set; }

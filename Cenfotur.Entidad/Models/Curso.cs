@@ -1,6 +1,7 @@
 // Curso.cs18:1618:16
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -43,5 +44,7 @@ namespace Cenfotur.Entidad.Models
         [Column(TypeName = "datetime")]
         public DateTime? FechaModificacion { get; set; }
         public bool Activo { get; set; }
+        
+        public ICollection<CursoPerfilRelacionado> CursoPerfilRelacionado { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Cenfotur.Entidad.DTOS.Input
         public string NombreComercial { get; set; }
         public string DepartamentoId { get; set; }
         public string TelefonoEmpresa { get; set; }
-        public int? PerfilRelacionadoId { get; set; }
+        public int[] PerfilRelacionado { get; set; }
         public IFormFile CertificadoTrabajo { get; set; }
         public IFormFile CertificadoEstudios { get; set; }
         public string RutaCertificadoTrabajo { get; set; }

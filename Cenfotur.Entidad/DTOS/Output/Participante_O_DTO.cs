@@ -23,8 +23,8 @@ namespace Cenfotur.Entidad.DTOS.Output
         public string DepartamentoId { get; set; }
         public string Departamento { get; set; }
         public string TelefonoEmpresa { get; set; }
-        public int? PerfilRelacionadoId { get; set; }
-        public string PerfilRelacionado { get; set; }
+        public int[] PerfilRelacionado { get; set; }
+        //public string PerfilRelacionado { get; set; }
         public string ArchivoCertificadoTrabajo { get; set; }
         public string ArchivoCertificadoEstudios { get; set; }
         public string RutaCertificadoTrabajo { get; set; }
