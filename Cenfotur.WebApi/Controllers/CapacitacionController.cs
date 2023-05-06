@@ -658,8 +658,11 @@ namespace Cenfotur.WebApi.Controllers
                         arrNotas.Add(nota.NumeroDocumento);
                         arrNotas.Add(nota.Participante);
                         arrNotas.Add(nota.Ee);
-                        arrNotas.Add(nota.Ep);
-                        arrNotas.Add(nota.Ed);
+                        arrNotas.Add(nota.Ep1);
+                        arrNotas.Add(nota.Ep2);
+                        arrNotas.Add(nota.Ep3);
+                        arrNotas.Add(nota.Ep4);
+                        arrNotas.Add(nota.Ep5);
                         arrNotas.Add(nota.Ef);
                         arrNotas.Add(nota.Nf);
                         arrNotas.Add(nota.Letras);
@@ -671,11 +674,14 @@ namespace Cenfotur.WebApi.Controllers
                     ws.Cell(indexNotas + 2, 2).Value = "Número Documento";
                     ws.Cell(indexNotas + 2, 3).Value = "Participante";
                     ws.Cell(indexNotas + 2, 4).Value = "EE";
-                    ws.Cell(indexNotas + 2, 5).Value = "EP";
-                    ws.Cell(indexNotas + 2, 6).Value = "ED";
-                    ws.Cell(indexNotas + 2, 7).Value = "EF";
-                    ws.Cell(indexNotas + 2, 8).Value = "NF";
-                    ws.Cell(indexNotas + 2, 9).Value = "Letras";
+                    ws.Cell(indexNotas + 2, 5).Value = "EP1";
+                    ws.Cell(indexNotas + 2, 6).Value = "EP2";
+                    ws.Cell(indexNotas + 2, 7).Value = "EP3";
+                    ws.Cell(indexNotas + 2, 8).Value = "EP4";
+                    ws.Cell(indexNotas + 2, 9).Value = "EP5";
+                    ws.Cell(indexNotas + 2, 10).Value = "EF";
+                    ws.Cell(indexNotas + 2, 11).Value = "NF";
+                    ws.Cell(indexNotas + 2, 12).Value = "Letras";
                     
                     //Resumen
                     var indexResumen = indexNotas + 2 + (listOfArrNotas.Count + 2);

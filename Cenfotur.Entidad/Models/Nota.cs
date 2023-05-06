@@ -12,10 +12,16 @@ namespace Cenfotur.Entidad.Models
         public int CapacitacionId { get; set; }
         [Column("EE", TypeName = "varchar(20)")]
         public string Ee { get; set; }
-        [Column("EP", TypeName = "varchar(20)")]
-        public string Ep { get; set; }
-        [Column("ED", TypeName = "varchar(20)")]
-        public string Ed { get; set; }
+        [Column("EP1", TypeName = "varchar(20)")]
+        public string Ep1 { get; set; }
+        [Column("EP2", TypeName = "varchar(20)")]
+        public string Ep2 { get; set; }
+        [Column("EP3", TypeName = "varchar(20)")]
+        public string Ep3 { get; set; }
+        [Column("EP4", TypeName = "varchar(20)")]
+        public string Ep4 { get; set; }
+        [Column("EP5", TypeName = "varchar(20)")]
+        public string Ep5 { get; set; }
         [Column("EF", TypeName = "varchar(20)")]
         public string Ef { get; set; }
         [Column("NF", TypeName = "varchar(20)")]

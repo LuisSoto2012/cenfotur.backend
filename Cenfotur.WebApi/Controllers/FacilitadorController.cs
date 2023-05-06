@@ -290,9 +290,13 @@ namespace Cenfotur.WebApi.Controllers
                         
                         if (registroDb != null)
                         {
+                            //falta hacer migracion
                             registroDb.Ee = notaDto.Ee;
-                            registroDb.Ep = notaDto.Ep;
-                            registroDb.Ed = notaDto.Ed;
+                            registroDb.Ep1 = notaDto.Ep1;
+                            registroDb.Ep2 = notaDto.Ep2;
+                            registroDb.Ep3 = notaDto.Ep3;
+                            registroDb.Ep4 = notaDto.Ep4;
+                            registroDb.Ep5 = notaDto.Ep5;
                             registroDb.Ef = notaDto.Ef;
                             registroDb.Nf = notaDto.Ef == "IPI" ? "IPI" : await CalcularNF(registroDb);
                             registroDb.SupervisorId = dto.SupervisorId.HasValue ? dto.SupervisorId.Value : registroDb.SupervisorId;
@@ -345,14 +349,22 @@ namespace Cenfotur.WebApi.Controllers
             else
             {
                 //Calcular NF
-                decimal promPracticas = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep) ? "0" : notaDb.Ep);
-                decimal promExFinal = decimal.Parse(string.IsNullOrEmpty(notaDb.Ef) ? "0" : notaDb.Ef);
 
-                var porcentajePractias = cursoDb.Practica ?? 0 + cursoDb.Practica2 ??
-                    0 + cursoDb.Practica3 ?? 0 + cursoDb.Practica4 ?? 0 + cursoDb.Practica5 ?? 0;
-                var porcentajeFinal = 1 - porcentajePractias;
+                decimal primeraPractica = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep1) ? "0" : notaDb.Ep1);
+                primeraPractica *= (cursoDb.Practica ?? 0) / 100;
+                decimal segundaPractica = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep2) ? "0" : notaDb.Ep2);
+                segundaPractica *= (cursoDb.Practica2 ?? 0) / 100;
+                decimal terceraPractica = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep3) ? "0" : notaDb.Ep3);
+                terceraPractica *= (cursoDb.Practica3 ?? 0) / 100;
+                decimal cuartaPractica = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep4) ? "0" : notaDb.Ep4);
+                cuartaPractica *= (cursoDb.Practica4 ?? 0) / 100;
+                decimal quintaPractica = decimal.Parse(string.IsNullOrEmpty(notaDb.Ep5) ? "0" : notaDb.Ep5);
+                quintaPractica *= (cursoDb.Practica5 ?? 0) / 100;
+                decimal examenFinal = decimal.Parse(string.IsNullOrEmpty(notaDb.Ef) ? "0" : notaDb.Ef);
+                examenFinal *= (cursoDb.Final / 100);
 
-                nf = Math.Round((promPracticas * porcentajePractias) + (promExFinal * porcentajeFinal), 0).ToString(CultureInfo.InvariantCulture);
+                nf = Math.Round((primeraPractica+segundaPractica+terceraPractica+cuartaPractica+quintaPractica+examenFinal), 0).ToString(CultureInfo.InvariantCulture);
+
             }
             
             return nf;
