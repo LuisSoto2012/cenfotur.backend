@@ -151,7 +151,7 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(x => x.Curso.PerfilRelacionado)
                 .Include(x => x.Gestor)
                 .Include(x => x.Facilitador)
-                .Where(x => x.FechaCreacion.Value.Year == anio).ToListAsync();
+                .Where(x => x.FechaInicio.Year.ToString() == anio.ToString() || x.FechaFin.Year.ToString() == anio.ToString()).ToListAsync();
 
             return listarDB.Select(x => _mapper.Map<CapacitacionPFC_O_DTO>(x));
         }

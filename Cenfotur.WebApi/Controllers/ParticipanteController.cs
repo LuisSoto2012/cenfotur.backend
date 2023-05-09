@@ -67,7 +67,8 @@ namespace Cenfotur.WebApi.Controllers
                 .Include(c => c.TipoRemuneracion)
                 .Include(c => c.Distrito)
                 .Include(c => c.Provincia)
-                .Include(c => c.PerfilRelacionado).FirstOrDefaultAsync(x => x.ParticipanteId == id);
+                .Include(c => c.ParticipantePerfilRelacionado)
+                .Include(c => c.PerfilRelacionado).FirstOrDefaultAsync(x => x.ParticipanteId == id) ;
 
             if (Participante == null)
             {

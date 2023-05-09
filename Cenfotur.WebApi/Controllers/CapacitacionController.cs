@@ -67,9 +67,8 @@ namespace Cenfotur.WebApi.Controllers
                     .Include(c => c.MaterialesAcademicos)
                     .Include(c => c.ParticipanteCapacitacion)
                     .ThenInclude(pc => pc.Participante.Certificados)
-                    .Where(c => c.FechaCreacion.Value.Year == filtro.Anio && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo)) 
+                    .Where(c => c.FechaInicio.Year.ToString() == filtro.Anio.ToString() || c.FechaFin.Year.ToString() == filtro.Anio.ToString() && (!filtro.Activo.HasValue || (c.Activo == filtro.Activo))
                                                                           && (!filtro.TipoCapacitacionId.HasValue || (c.TipoCapacitacionId == filtro.TipoCapacitacionId)))
-
                     .OrderByDescending(c => c.FechaCreacion).ToListAsync();
 
                 //listaResult = capacitacionDb.Select(c => _mapper.Map<Capacitacion_O_DTO>(c));
