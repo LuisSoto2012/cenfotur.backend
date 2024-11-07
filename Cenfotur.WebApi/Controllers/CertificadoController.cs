@@ -41,8 +41,6 @@ namespace Cenfotur.WebApi.Controllers
                     return listaResult;
             
                 var capacitacionDb = await _context.Capacitaciones
-                    .Include(c => c.Ubigeo.Provincia)
-                    .Include(c => c.Ubigeo.Departamento)
                     .Include(c => c.Facilitador)
                     .Include(c => c.Gestor)
                     .Include(c => c.Curso)

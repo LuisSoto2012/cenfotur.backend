@@ -212,8 +212,6 @@ namespace Cenfotur.WebApi.Controllers
                             PointF codigoLocation = new PointF(245f, 1625f);
                             PointF barcodeLocation = new PointF(300f, 1590f);
 
-                            // PointF secondLocation = participante.UserType.Contains("MEDICO") || participante.UserType.Contains("MÉDICO") ? 
-                            //     new PointF(128f, 830f) : new PointF(110f, 830f) ;
                             Bitmap bitmap = (Bitmap)System.Drawing.Image.FromFile(plantilla);//load the image file
 
                             using (Graphics graphics = Graphics.FromImage(bitmap))
@@ -223,7 +221,7 @@ namespace Cenfotur.WebApi.Controllers
                                     Alignment = StringAlignment.Center,
                                     LineAlignment = StringAlignment.Center,
                                 })
-                                using (Font textFont = new Font("Arial Black", 27))
+                                using (Font textFont = new Font("Arial Black", 20))
                                 {
                                     graphics.DrawString(nombreCompleto, textFont, Brushes.Black, nombreLocation, sf);
                                     // graphics.DrawString(secondText, arialFont, Brushes.Red, secondLocation);
@@ -233,7 +231,7 @@ namespace Cenfotur.WebApi.Controllers
                                     Alignment = StringAlignment.Center,
                                     LineAlignment = StringAlignment.Center,
                                 })
-                                using (Font textFont2 = new Font("Arial", 18, FontStyle.Bold))
+                                using (Font textFont2 = new Font("Arial", 15, FontStyle.Bold))
                                 {
                                     graphics.DrawString(nombreCurso, textFont2, Brushes.Black, cursoLocation, sf2);
                                 }

@@ -334,9 +334,9 @@ namespace Cenfotur.WebApi.Controllers
             //Calcular dias necesarios de asistencia
             var horasMin = cursoDb.HorasAprobar;
             var horasTotal = cursoDb.Horas;
-            var totalDias = (notaDb.Capacitacion.FechaFin - notaDb.Capacitacion.FechaInicio).TotalDays;
-            var totalHorasPorDia = (int)(horasTotal / totalDias);
-            var totalAsistenciasNecesarias = (int) horasMin / totalHorasPorDia;  
+            var totalDias = cursoDb.Dias;
+            var totalHorasPorDia = (int)(horasTotal / totalDias); 
+            var totalAsistenciasNecesarias = (int) horasMin / totalHorasPorDia;
             
             //Validar asistencia
             var asistenciaParticipante = await _context.Asistencia.Where(x =>
